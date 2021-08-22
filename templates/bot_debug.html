@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="block_main">
+
+    <div class="block_user_selection">
+        <form action='/bot_debug' method="POST">
+            <label>User: </label>
+            <select id="selectvalue" name="user">
+                {% for user in debug_users %}
+                    <option value={{user.id}}>{{user.name}} (id: {{user.id}})</option>
+                {% endfor %}
+            </select>
+            <input class="button_confirm" type="submit" value="Select">
+        </form>
+    </div>
+
+    {% if current_user %}
+        <p>Selected user {{current_user.name}} (id: {{current_user.id}})</p>
+    {% else %}
+        <p>User isn't choosen</p>
+    {% endif %}
+
+    <div class="block_chat_box">
+        <div class="message_track">
+        {% for m in messages %}
+            {% if m.author == 'bot' %}
+                <div class='message_bot'>{{m.text}}</div>
+            {% elif m.author == 'user' %}
+                <div class='message_user'>{{m.text}}</div>
+            {% else %}
+                <div>Unknown author</div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </div>
+
+    <form action='/bot_debug' method="POST">
+        <textarea name="message_new"></textarea>
+        <input class="button_confirm" type="submit" value="Send">
+    </form>
+
+</div>
+    
+{% endblock %}

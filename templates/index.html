@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a href='/bot_debug'>Ссылка</a>
+<ul>
+{% for link in links %}
+<li><a href={{link.path}}>{{link.text}}</li>
+{% endfor %}
+</ul>
+{% endblock %}

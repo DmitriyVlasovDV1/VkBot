@@ -1,0 +1,78 @@
+.block_main {
+  position: absolute;
+  margin-left: 30px;
+}
+
+
+
+.button_confirm
+{
+  position: relative;
+  margin-left: 10px;
+}
+
+.block_user_selection
+{
+  position: relative;
+  margin-top: 30px;
+  margin-bottom: 15px;
+  height: 50px;
+  width: 400px;
+}
+
+.block_chat_box {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  height: 500px;
+  width: 400px;
+  background-color: rgb(121, 163, 241);
+  border: 3px solid rgb(0, 102, 255);
+  border-radius: 10px 0 0 10px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+.message_track {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 10px;
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.message{
+  display: block;
+}
+.message_bot {
+  margin-bottom: 10px;
+ 
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+
+  background-color: rgb(255, 255, 255);
+  color:black;
+  text-align: left;
+  border-radius: 10px;
+  border-radius: 10px 10px 10px 0;
+  white-space: pre-line;
+  box-shadow: 2px 3px;
+}
+
+.message_user {
+  margin-bottom: 10px;
+ 
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+
+  background-color: rgb(255, 255, 255);
+  color:black;
+  text-align: right;
+  border-radius: 10px 10px 0 10px;
+  white-space: pre-line;
+  box-shadow: 2px 3px;
+}
+
+
