@@ -11,9 +11,9 @@ class response_handler:
         self.database = db
 
     def send_message(self, user_id, text):
-        debug_user_id = self.database.is_debug_user(user_id)
-        if debug_user_id != None:
-            self.database.debug_messages_add(debug_user_id, 'bot', text)
+        debug_user_name = self.database.is_debug_user(user_id)
+        if debug_user_name != None:
+            self.database.debug_messages_add(debug_user_name, 'bot', text)
         else:
             self.api.messages.send(access_token=bot_settings.ACCESS_TOKEN,
                 user_id=str(user_id),
@@ -59,13 +59,14 @@ class response_handler:
         if phase == 1:
             if data['body'] not in ['Y', 'N', '/quit']:
                 self.send_message(data['user_id'], 'Напишите Y/N или /quit чтобы выйти')
+                return
 
             if  data['body'] == '/quit':
                 self.database.users_update_session(data['user_id'], 'default', 0)
                 return
 
             self.database.list_erase(data['user_id'])
-            self.database.list_push_back(data['user_id'], 1, data['body'])
+            self.database.list_push_back(data['user_id'], 'text', data['body'])
 
             self.database.users_update_session(data['user_id'], 'help', 2)
 
@@ -80,13 +81,13 @@ class response_handler:
                 self.database.users_update_session(data['user_id'], 'default', 0)
                 return
 
-            self.database.list_push_back(data['user_id'], 0, data['body'])
+            self.database.list_push_back(data['user_id'], 'num', data['body'])
             list = self.database.list_get(data['user_id'])
             self.database.list_erase(data['user_id'])
 
             self.database.users_update_session(data['user_id'], 'default', 0)
 
-            self.send_message(data['user_id'], 'Ваши ответы:' + str(list))
+            self.send_message(data['user_id'], f'Ваши ответы: {list[0]}, {list[1]}')
 
         return
 

@@ -48,8 +48,9 @@ def bot_debug():
         elif 'message_new' in request.form and 'current_user' in session:
             user_name = session['current_user']
             message = request.form['message_new']
+            debug_user = db.debug_user_get(user_name)
             db.debug_messages_add(user_name, 'user', message)
-            #response_handler({'user_id' : user_id, 'body' : message})
+            reshand.run_session({'user_id' : debug_user['user_id'], 'body' : message})
 
     debug_users = db.debug_users_get()
     if 'current_user' in session:

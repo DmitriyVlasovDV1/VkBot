@@ -71,7 +71,7 @@ class database:
 
 #Users tables
     def is_user(self, user_id):
-        command = "SELECT * FROM users WHERE user_id = {0}".format(user_id)
+        command = "SELECT * FROM users WHERE id = {0}".format(user_id)
         self.cursor.execute(command)
 
         data = self.cursor.fetchone()
@@ -87,7 +87,7 @@ class database:
         return {'session' : data[0], 'phase' : data[1]}
 
     def users_update_session(self, user_id, session, phase):
-        command = "UPDATE sessions SET session = '{0}', phase = {1} WHERE user_id = {2}".format(session, phase, user_id)
+        command = "UPDATE users SET session = '{0}', phase = {1} WHERE id = {2}".format(session, phase, user_id)
         self.cursor.execute(command)
         return
 
@@ -110,7 +110,7 @@ class database:
 
 #Debug users tables
     def is_debug_user(self, user_id):
-        command = "SELECT id FROM debug_users WHERE user_id = {0}".format(user_id)
+        command = "SELECT name FROM debug_users WHERE user_id = {0}".format(user_id)
         self.cursor.execute(command)
 
         data = self.cursor.fetchone()
@@ -179,17 +179,19 @@ class database:
 
 #List table
     def list_erase(self, user_id):
-        command = 'DELETE FROM list WHERE user_id = {0}'.format(user_id)
+        command = 'DELETE FROM list WHERE user_id={0}'.format(user_id)
         self.cursor.execute(command)
         return
 
     def list_push_back(self, user_id, type, value):
         command = "INSERT INTO list (user_id, type, num, text) VALUES ({0}, '{1}', {2}, '{3}')"
 
-        if type == 0:
+        if type == 'num':
             command = command.format(user_id, type, value, '')
-        else:
+        elif type == 'text':
             command = command.format(user_id, type, 0, value)
+        else:
+            return
 
         self.cursor.execute(command)
         return
