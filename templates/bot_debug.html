@@ -6,17 +6,25 @@
     <div class="block_user_selection">
         <form action='/bot_debug' method="POST">
             <label>User: </label>
-            <select id="selectvalue" name="user">
+            <select id="selectvalue" name="selected_user">
                 {% for user in debug_users %}
-                    <option value={{user.id}}>{{user.name}} (id: {{user.id}})</option>
+                    <option value={{user.name}}>{{user.name}} (id: {{user.user_id}})</option>
                 {% endfor %}
             </select>
             <input class="button_confirm" type="submit" value="Select">
         </form>
     </div>
 
+    <form action='/bot_debug' method="POST">
+        <input type="text" name="add_user" value="" required/>
+        <input class="button_confirm" type="submit" value="Added user">
+        {% for cat, msg in get_flashed_messages(True) %}
+            <div>{{ msg }}</div>
+        {% endfor %}
+    </form>
+
     {% if current_user %}
-        <p>Selected user {{current_user.name}} (id: {{current_user.id}})</p>
+        <p>Selected user: {{current_user.name}} (id: {{current_user.user_id}})</p>
     {% else %}
         <p>User isn't choosen</p>
     {% endif %}
@@ -24,9 +32,9 @@
     <div class="block_chat_box">
         <div class="message_track">
         {% for m in messages %}
-            {% if m.author == 'bot' %}
+            {% if m.type == 'bot' %}
                 <div class='message_bot'>{{m.text}}</div>
-            {% elif m.author == 'user' %}
+            {% elif m.type == 'user' %}
                 <div class='message_user'>{{m.text}}</div>
             {% else %}
                 <div>Unknown author</div>
