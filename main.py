@@ -7,35 +7,14 @@ from flask.sessions import NullSession
 from response_handler import response_handler
 from database import database
 
-
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 db = database()
 reshand = response_handler(db)
 
-links = [{'path' : '/bot_debug', 'text' : 'Bot debug'},
-         {'path' : '/information', 'text' : 'Information'},
-         {'path' : '/statistics', 'text' : 'Statistics'}
-]
-
-messages = [{'author' : 'bot', 'text': 'Im Bot'},
-{'author' : 'user', 'text': 'Im User'},
-{'author' : 'bot', 'text': 'Hello\nHello!!!!'},
-{'author' : 'user', 'text': 'Hiffffffffff, bot'},
-] * 5
-
-debug_users = [{'name' : 'Anton', 'id' : 23123},
-               {'name' : 'Anton4', 'id' : 23123},
-               {'name' : 'Antdfso5n', 'id' : 23123},
-               {'name' : 'Adsfnto5n', 'id' : 23123},
-               {'name' : 'Anasasdto5n', 'id' : 23123}]
-
-
 @app.route('/bot_debug', methods=["POST", "GET"])
 def bot_debug():
-    
-
     if request.method == 'POST':
         if 'selected_user' in request.form:
             session['current_user'] = request.form['selected_user']
@@ -74,22 +53,3 @@ def main_get():
         return 'ok'
     return render_template('index.html', title='Index', links = links)
 
-#@app.route('/', methods=['POST'])
-'''
-@app.route('/', methods=['GET'])
-def processing():
-    #Распаковываем json из пришедшего POST-запроса
-    data = json.loads(request.data)
-
-    if 'type' not in data.keys():
-        return 'not ok'
-    if data['type'] == 'confirmation':
-        return bot_settings.CONFIRMATION_TOKEN
-    if 'object' not in data.keys():
-        return 'not ok'
-
-    #if data['type'] == 'message_new':
-        #reshand.run_session(data['object'])
-
-    return 'ok'
-'''
