@@ -163,7 +163,9 @@ body {
   letter-spacing: 0.1em;
   color: #FFFFFF;
 }
-.navbar__line {
+.navbar__option_active:after {
+  content: "";
+  display: block;
   position: relative;
   border: 2px solid #0087DD;
   border-radius: 50px;
@@ -185,10 +187,10 @@ body {
   height: 90%;
   margin: auto;
 }
-.content__item:nth-child(1) {
+.content__item:nth-child(2) {
   flex-basis: 40%;
 }
-.content__item:nth-child(2) {
+.content__item:nth-child(1) {
   flex-basis: 25%;
 }
 

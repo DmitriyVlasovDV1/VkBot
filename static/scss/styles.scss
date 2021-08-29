@@ -125,13 +125,14 @@ $lightgreycolor: #C4C4C4;
         line-height: 28px;
         letter-spacing: 0.1em;
         color: #FFFFFF;
-    }
 
-    &__line {
-        position: relative;
-        border: 2px solid #0087DD;
-        border-radius: 50px;
-        //@extend %tmpldebug;
+        &_active:after {
+            content: '';
+            display: block;
+            position: relative;
+            border: 2px solid #0087DD;
+            border-radius: 50px;
+        }
     }
 
     &__option:hover {
@@ -155,11 +156,11 @@ $lightgreycolor: #C4C4C4;
         margin: auto;
     }
 
-    &__item:nth-child(1) {
+    &__item:nth-child(2) {
         flex-basis: 40%;
     }
 
-    &__item:nth-child(2) {
+    &__item:nth-child(1) {
         flex-basis: 25%;
     }
 
