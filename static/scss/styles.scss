@@ -1,0 +1,203 @@
+@import "null_style.scss";
+
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+%tmpldebug {
+    background-color: rgba(255, 3, 3, 0.26);
+    border: 2px solid rgb(72, 216, 72);
+}
+
+body {
+    background-image: url("/static/images/background.png");
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+}
+
+$stride: 0.8;
+$size_account: 80px;
+$size_search_bar: 70px;
+
+.header {
+    display: flex;
+
+    height: 15%;
+    min-height: 100px;
+    margin-top: 2%;
+    justify-content: space-around;
+    align-items: center;
+
+    overflow: visible;
+
+    @extend %tmpldebug;
+
+    &__item {
+        //@extend %tmpldebug;
+    }
+
+    &__item:nth-child(1) {
+        flex-basis: 15%;
+        height: 60%;
+    }
+
+    &__item:nth-child(2) {
+        flex-basis: 50%;
+        height: $size_search_bar; 
+    }
+
+    &__item:nth-child(3) {
+        flex-basis: 15%;
+        //@extend %tmpldebug;
+    }
+
+    &__logo {
+        background-image: url("/static/images/logo.png");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100%;
+        //@extend %tmpldebug;
+    }
+
+    &__navbar {
+        width: 100%;
+        height: 100%;
+        border: 3px solid #0087DD;
+        border-radius: 50px;
+        //@extend %tmpldebug;
+    }
+
+    &__account-outer {
+        position: relative;
+        height: $size_account;
+        width: $size_account;
+        margin-left: -$size_account / 2;
+        border-radius: 50%;
+        left:50%;
+
+        border: 3px solid #0087DD;
+
+    }
+    &__account-inner {
+        background-image: url("/static/images/account.jpg");
+        background-size: cover;
+        background-position: center;
+
+        position: relative;
+        height: $size_account * $stride;
+        width: $size_account * $stride;
+        border-radius: 50%;
+        left:50%;
+        top:50%;
+        margin-left: -$size_account * $stride / 2;
+        margin-top: -$size_account * $stride / 2;
+
+        border: 3px solid #0087DD;
+    }
+
+    &__account-inner:hover {
+        background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 100%), url('/static/images/account.jpg');
+        //background: radial-gradient(circle, rgba(0,255,252,0) 0%, rgba(255,255,255,1) 76%, rgba(0,212,255,0) 100%);
+    }
+}
+
+.navbar {
+    display:flex;
+    justify-content: space-around;
+    align-items: center;
+
+    &__option {
+        color: white;
+        font-size: 20px;
+        font-family: 'Roboto', sans-serif;
+
+        &_active {
+            color: #0087DD;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    }
+
+    &__option:hover {
+        color: #7eceff;
+        text-decoration: underline;
+    }
+}
+
+.content {
+    //@extend %tmpldebug;
+    margin-top: 2%;
+    height: 70%;
+    min-height: 500px;
+
+    display: flex;
+    justify-content: space-around;
+
+    &__item {
+        @extend %tmpldebug;
+        background-color: #222324;
+        border-radius: 30px;
+        height: 90%;
+        margin: auto;
+    }
+
+    &__item:nth-child(1) {
+        flex-basis: 40%;
+    }
+
+    &__item:nth-child(2) {
+        flex-basis: 25%;
+    }
+
+    
+}
+
+.chatbox {
+    //@extend %tmpldebug;
+
+    display:flex;
+    height: 100%;
+
+    flex-direction: column;
+
+    &__header {
+        height: 50px;
+        min-height: 50px;
+        @extend %tmpldebug;
+        text-align: center;
+    }
+
+    &__messager {
+        flex-grow:1;
+        min-height: 200px;
+        @extend %tmpldebug;
+    }
+
+    &__sendbar {
+        height: 50px;
+        min-height: 50px;
+        @extend %tmpldebug;
+    }
+}
+/*
+.messager {
+    margin: 24px auto 0 auto;
+	padding: 0 20px 0 0;
+	list-style: none;
+	overflow-y: scroll;
+    overflow-x: hidden;
+
+    &__message {
+        position: relative;
+        clear: both;
+        display: inline-block;
+        padding: 16px 40px 16px 20px;
+        margin: 0 0 20px 0;
+        font: 16px/20px 'Noto Sans', sans-serif;
+        border-radius: 10px;
+    }
+    
+}*/
