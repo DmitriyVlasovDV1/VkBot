@@ -20,6 +20,11 @@ body {
 $stride: 0.8;
 $size_account: 80px;
 $size_search_bar: 70px;
+$messagecurve: 20px;
+
+$bluecolor: #0087DD;
+$lightbluecolor: #7eceff; 
+$greycolor: #222324;
 
 .header {
     display: flex;
@@ -65,7 +70,7 @@ $size_search_bar: 70px;
     &__navbar {
         width: 100%;
         height: 100%;
-        border: 3px solid #0087DD;
+        border: 3px solid $bluecolor;
         border-radius: 50px;
         //@extend %tmpldebug;
     }
@@ -78,7 +83,7 @@ $size_search_bar: 70px;
         border-radius: 50%;
         left:50%;
 
-        border: 3px solid #0087DD;
+        border: 3px solid $bluecolor;
 
     }
     &__account-inner {
@@ -95,7 +100,7 @@ $size_search_bar: 70px;
         margin-left: -$size_account * $stride / 2;
         margin-top: -$size_account * $stride / 2;
 
-        border: 3px solid #0087DD;
+        border: 3px solid $bluecolor;
     }
 
     &__account-inner:hover {
@@ -115,14 +120,14 @@ $size_search_bar: 70px;
         font-family: 'Roboto', sans-serif;
 
         &_active {
-            color: #0087DD;
+            color: $bluecolor;
             font-weight: bold;
             text-decoration: underline;
         }
     }
 
     &__option:hover {
-        color: #7eceff;
+        color: $lightbluecolor;
         text-decoration: underline;
     }
 }
@@ -137,8 +142,7 @@ $size_search_bar: 70px;
     justify-content: space-around;
 
     &__item {
-        @extend %tmpldebug;
-        background-color: #222324;
+        background-color: $greycolor;
         border-radius: 30px;
         height: 90%;
         margin: auto;
@@ -166,7 +170,7 @@ $size_search_bar: 70px;
     &__header {
         height: 50px;
         min-height: 50px;
-        //@extend %tmpldebug;
+        @extend %tmpldebug;
         text-align: center;
     }
 
@@ -179,7 +183,7 @@ $size_search_bar: 70px;
     &__sendbar {
         height: 50px;
         min-height: 50px;
-        //@extend %tmpldebug;
+        @extend %tmpldebug;
     }
 }
 .messager {
@@ -191,19 +195,20 @@ $size_search_bar: 70px;
         padding: 5px;
         display: inline-block;
         clear: both;
+        background-color: $lightbluecolor;
 
-        &_user {
+        border: 3px solid $bluecolor; 
+        &_left {
             float: left;
             margin-left: 10px;
-
-            @extend %tmpldebug;
+            border-radius: $messagecurve $messagecurve $messagecurve 0;
         }
         
-        &_bot {
+        &_right {
             float: right;
             margin-right: 10px;
+            border-radius: $messagecurve $messagecurve 0 $messagecurve;
 
-            @extend %tmpldebug;
         }
 
     }
