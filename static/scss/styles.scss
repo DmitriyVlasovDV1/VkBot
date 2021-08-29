@@ -199,8 +199,8 @@ $lightgreycolor: #C4C4C4;
 
     &__message {
         font-size: 20;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        padding-top: 15px;
+        padding-bottom: 15px;
         padding-right: 12px;
         padding-left: 12px;
         display: inline-block;
@@ -216,6 +216,7 @@ $lightgreycolor: #C4C4C4;
         
         &_left {
             float: left;
+            margin-left: 10px;
         }
         
         &_right {
@@ -230,7 +231,9 @@ $lightgreycolor: #C4C4C4;
         text-align: right;
         content: '20:53';
         font-size: 10px;
-        margin-top: 2px;
+        margin-top: 5px;
+        color:rgb(165, 165, 165);
+
     }
     
 }
