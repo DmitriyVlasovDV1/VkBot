@@ -75,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*--------------------*/
-.chatbox__sendbar, .chatbox__header, .header {
+.header {
   background-color: rgba(255, 3, 3, 0.26);
   border: 2px solid #48d848;
 }
@@ -155,13 +155,9 @@ body {
   align-items: center;
 }
 .navbar__option {
-  font-family: Roboto;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 28px;
-  letter-spacing: 0.1em;
-  color: #FFFFFF;
+  color: white;
+  font-size: 25px;
+  font-family: "Roboto", sans-serif;
 }
 .navbar__option_active:after {
   content: "";
@@ -198,19 +194,50 @@ body {
   display: flex;
   height: 100%;
   flex-direction: column;
+  overflow: hidden;
 }
 .chatbox__header {
+  display: flex;
+  justify-content: center;
   height: 50px;
   min-height: 50px;
-  text-align: center;
+  background-color: #404143;
+  border-radius: 30px 30px 0 0;
 }
 .chatbox__messager {
   flex-grow: 1;
   min-height: 200px;
 }
 .chatbox__sendbar {
+  display: flex;
+  justify-content: center;
   height: 50px;
   min-height: 50px;
+  background-color: #404143;
+  border-radius: 0 0 30px 30px;
+}
+.chatbox__input {
+  background: none;
+  resize: none;
+  height: 80%;
+  width: 75%;
+  margin: 0px;
+  padding-right: 20px;
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+}
+.chatbox__icon {
+  align-self: center;
+  background-image: url("/static/images/message_plane.png");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 60%;
+}
+.chatbox__icon:hover {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%), url("/static/images/message_plane.png");
 }
 
 .messager {
@@ -248,6 +275,25 @@ body {
   font-size: 10px;
   margin-top: 5px;
   color: #a5a5a5;
+}
+
+.boxheader {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 3px solid #0087DD;
+  border-radius: 50px;
+  min-width: 150px;
+  margin-left: 10px;
+  margin-right: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.boxheader__item {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
 }
 
 /* для Chrome/Edge/Safari */
