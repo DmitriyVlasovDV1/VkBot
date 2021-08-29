@@ -46,6 +46,7 @@ $greycolor: #222324;
     &__item:nth-child(1) {
         flex-basis: 15%;
         height: 60%;
+        
     }
 
     &__item:nth-child(2) {
@@ -115,20 +116,24 @@ $greycolor: #222324;
     align-items: center;
 
     &__option {
-        color: white;
-        font-size: 20px;
-        font-family: 'Roboto', sans-serif;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 300;
+        font-size: 24px;
+        line-height: 28px;
+        letter-spacing: 0.1em;
+        color: #FFFFFF;
+    }
 
-        &_active {
-            color: $bluecolor;
-            font-weight: bold;
-            text-decoration: underline;
-        }
+    &__line {
+        position: relative;
+        border: 2px solid #0087DD;
+        border-radius: 50px;
+        //@extend %tmpldebug;
     }
 
     &__option:hover {
         color: $lightbluecolor;
-        text-decoration: underline;
     }
 }
 

@@ -155,18 +155,21 @@ body {
   align-items: center;
 }
 .navbar__option {
-  color: white;
-  font-size: 20px;
-  font-family: "Roboto", sans-serif;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: 0.1em;
+  color: #FFFFFF;
 }
-.navbar__option_active {
-  color: #0087DD;
-  font-weight: bold;
-  text-decoration: underline;
+.navbar__line {
+  position: relative;
+  border: 2px solid #0087DD;
+  border-radius: 50px;
 }
 .navbar__option:hover {
   color: #7eceff;
-  text-decoration: underline;
 }
 
 .content {
