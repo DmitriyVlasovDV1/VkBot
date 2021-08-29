@@ -166,38 +166,48 @@ $size_search_bar: 70px;
     &__header {
         height: 50px;
         min-height: 50px;
-        @extend %tmpldebug;
+        //@extend %tmpldebug;
         text-align: center;
     }
 
     &__messager {
         flex-grow:1;
         min-height: 200px;
-        @extend %tmpldebug;
+        //@extend %tmpldebug;
     }
 
     &__sendbar {
         height: 50px;
         min-height: 50px;
-        @extend %tmpldebug;
+        //@extend %tmpldebug;
     }
 }
-/*
 .messager {
-    margin: 24px auto 0 auto;
-	padding: 0 20px 0 0;
-	list-style: none;
 	overflow-y: scroll;
     overflow-x: hidden;
 
+
+
     &__message {
-        position: relative;
-        clear: both;
+        font-size: 20;
+        padding: 5px;
         display: inline-block;
-        padding: 16px 40px 16px 20px;
-        margin: 0 0 20px 0;
-        font: 16px/20px 'Noto Sans', sans-serif;
-        border-radius: 10px;
+        clear: both;
+
+        &_bot {
+            float: right;
+            
+            margin-right: 10px;
+
+            @extend %tmpldebug;
+        }
+
+        &_user {
+            float: left;
+            margin-right: 10px;
+
+            @extend %tmpldebug;
+        }
     }
     
-}*/
+}

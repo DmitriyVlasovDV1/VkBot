@@ -75,7 +75,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*--------------------*/
-.chatbox__sendbar, .chatbox__messager, .chatbox__header, .content__item, .header {
+.messager__message_user, .messager__message_bot, .content__item, .header {
   background-color: rgba(255, 3, 3, 0.26);
   border: 2px solid #48d848;
 }
@@ -208,24 +208,23 @@ body {
   min-height: 50px;
 }
 
-/*
 .messager {
-    margin: 24px auto 0 auto;
-	padding: 0 20px 0 0;
-	list-style: none;
-	overflow-y: scroll;
-    overflow-x: hidden;
-
-    &__message {
-        position: relative;
-        clear: both;
-        display: inline-block;
-        padding: 16px 40px 16px 20px;
-        margin: 0 0 20px 0;
-        font: 16px/20px 'Noto Sans', sans-serif;
-        border-radius: 10px;
-    }
-
-}*/
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.messager__message {
+  font-size: 20;
+  padding: 5px;
+  display: inline-block;
+  clear: both;
+}
+.messager__message_bot {
+  float: right;
+  margin-right: 10px;
+}
+.messager__message_user {
+  float: left;
+  margin-right: 10px;
+}
 
 /*# sourceMappingURL=styles.css.map */
