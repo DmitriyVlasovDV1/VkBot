@@ -1,12 +1,7 @@
-<!-- {% extends 'base.html' %}
-
-{% block content %}
-<p>Text</p>
-{% endblock %}-->
 
 <html>
     <head>
-        <link type="text/css" href="/static/css/styles.css" rel="stylesheet"/>
+        <link type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"/>
         <title>No title</title>
     </head>
 
@@ -35,19 +30,32 @@
         </div>
         <div class="content">
             <div class="content__item">
-                <div class="selector">
+                <div class="box">
+                    <div class="box__header">
+                        <div class="boxheader">
+                            <input required class="boxheader__input" id="input_user_name" type="text" placeholder="Type new uers's name ">
+                            <div class="box__icon box__icon_plus" id="button_add_user"></div>
+                        </div>
+                    </div>
+                    <div class="box__roll" id="selector">
+                        <div class="user">
+                            <div class="user__name">Dmitriy Vlasov</div>
+                            <div class="box__icon box__icon_plane" id="button_select_user"></div>
+                            <div class="box__icon box__icon_plane" id="button_delete_user"></div>
+                        </div>
+                    </div>
                     <div class="selector__header"></div>
                 </div>
             </div>
 
             <div class="content__item">
-                <div class="chatbox">
-                    <div class="chatbox__header">
+                <div class="box">
+                    <div class="box__header">
                         <div class="boxheader">
-                            <div class="boxheader__item">Dmitriy Vlasov</div>
+                            <div class="boxheader__username" id="text_current_user">Dmitriy Vlasov</div>
                         </div>
                     </div>
-                    <div class="chatbox__messager messager">
+                    <div class="box__roll messager" id="messager">
                         <div class="messager__message messager__message_left">Hello</div>
                         <div class="messager__message messager__message_right">help</div>
                         <div class="messager__message messager__message_left">please</div>
@@ -74,14 +82,15 @@
                         <div class="messager__message messager__message_right">Ok</div>
                         <div class="messager__message messager__message_right">Ok</div>
                     </div>
-                    <div class="chatbox__sendbar">
-                        <textarea class="chatbox__input"> </textarea>    
-                        <div class="chatbox__icon"></div>
+                    <div class="box__sendbar">
+                        <textarea class="box__input" id="textarea_message"> </textarea>    
+                        <div class="box__icon box__icon_plane" id="button_message"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
     </body>
 </html>

@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 %tmpldebug {
-    background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
+    //background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
 }
 
 @mixin text($size, $color) {
@@ -159,13 +159,13 @@ $lightgreycolor: #C4C4C4;
     }
 
     &__item:nth-child(1) {
-        flex-basis: 25%;
+        flex-basis: 30%;
     }
 
     
 }
 
-.chatbox {
+.box {
     //@extend %tmpldebug;
     display:flex;
     height: 100%;
@@ -185,9 +185,11 @@ $lightgreycolor: #C4C4C4;
         border-radius: 30px 30px 0 0;
     }
 
-    &__messager {
+    &__roll {
         flex-grow:1;
         min-height: 200px;
+        overflow-y: scroll;
+        overflow-x: hidden;
         //@extend %tmpldebug;
     }
 
@@ -219,14 +221,22 @@ $lightgreycolor: #C4C4C4;
     &__icon {
         align-self: center;
 
-        background-image: url("/static/images/message_plane.png");
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
         width: 40px;
         height: 60%;
-        //@extend %tmpldebug;
+        @extend %tmpldebug;
     }
+
+    &__icon_plane {
+        background-image: url("/static/images/message_plane.png");
+    }
+
+    &__icon_plus {
+        background-image: url("/static/images/message_plane.png");
+    }
+
 
     &__icon:hover {
         background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), url('/static/images/message_plane.png');
@@ -234,9 +244,6 @@ $lightgreycolor: #C4C4C4;
 
 }
 .messager {
-	overflow-y: scroll;
-    overflow-x: hidden;
-
     &__message {
         font-size: 20;
         padding-top: 15px;
@@ -246,8 +253,8 @@ $lightgreycolor: #C4C4C4;
         display: inline-block;
         clear: both;
         background-color: $greycolor;
-        border: 3px; 
-        margin-top: 5px;
+        margin-top: 3px;
+        margin-bottom: 3px;
 
         @include text(20px, white);
 
@@ -277,6 +284,33 @@ $lightgreycolor: #C4C4C4;
     
 }
 
+.user {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    height: 50px;
+
+    background-color: $greycolor;
+    margin-top: 5px;
+
+
+    //@extend %tmpldebug;
+
+    @include text(20px, white);
+
+    border-radius: $messagecurve;
+
+    &__name {
+        flex-basis: 50%;
+        flex-grow: 1;
+        margin-left: 15px;
+        margin-right: 15px;
+        color:yellowgreen;
+        @extend %tmpldebug;
+    }
+}
+
 
 .boxheader {
     display:inline-flex;
@@ -293,11 +327,24 @@ $lightgreycolor: #C4C4C4;
     padding-left: 20px;
     padding-right: 20px;
 
-    &__item {
+    &__username {
         text-align: center;
         @include text(20px, white);
         //@extend %tmpldebug;
     }
+
+    &__input {
+        background: none;
+        size: 10;
+        @include text(15px, white);
+        //@extend %tmpldebug;
+    }
+
+    &__input::placeholder {
+        @include text(15px, $lightgreycolor)
+    }
+
+
 }
 
 

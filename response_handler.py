@@ -13,7 +13,7 @@ class response_handler:
     def send_message(self, user_id, text):
         debug_user = self.db.get_one('debug_users', {'user_id': user_id})
         if debug_user != None:
-            self.db.add_one('debug_messages', {'debug_user_name': debug_user.name, 'type': 'bot', 'text': text})
+            self.db.add_one('debug_messages', {'debug_user_name': debug_user['name'], 'type': 'bot', 'text': text})
         else:
             self.api.messages.send(access_token=bot_settings.ACCESS_TOKEN,
                 user_id=str(user_id),
@@ -28,16 +28,16 @@ class response_handler:
         if self.db.get_one('users', {'id': data['user_id']}) == None:
             return
 
-        session = self.database.users_get_session(data['user_id'])
+        user = self.db.get_one('users', {'id': data['user_id']})
 
-        if session['session'] == 'default':
-            self.session_default(session['phase'], data)
-        elif session['session'] == 'help':
-            self.session_help(session['phase'], data)
+        if user['session'] == 'default':
+            self.session_default(user['phase'], data)
+        elif user['session'] == 'help':
+            self.session_help(user['phase'], data)
         return
 
     def update_session(self, user_id, session, phase):
-        self.db.update_all('users', {'id': user_id, 'session': session, 'phase': phase})
+        self.db.update_all('users', {'session': session, 'phase': phase}, {'id': user_id})
         return
 
     def list_erase(self, user_id):

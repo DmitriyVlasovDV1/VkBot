@@ -84,15 +84,17 @@ class database:
             database=bot_settings.DB_NAME,
             cursorclass=pymysql.cursors.DictCursor)
 
-    def add_one(self, table_name, element):
+    def add_one(self, table_name, element={}):
+        id = -1
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
                 command = f"INSERT IGNORE INTO { table_name } ({ parameters(list(element.keys())) }) VALUES ({ arguments(list(element.values())) })"
                 cursor.execute(command)
+                id = cursor.lastrowid
             connection.commit()
-        return
+        return id
 
-    def get_all(self, table_name, element):
+    def get_all(self, table_name, element={}):
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
                 command = f"SELECT * FROM { table_name }"
@@ -104,7 +106,7 @@ class database:
                 return cursor.fetchall()
         return []
 
-    def get_one(self, table_name, element):
+    def get_one(self, table_name, element={}):
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
                 command = f"SELECT * FROM { table_name }"
@@ -116,8 +118,13 @@ class database:
                 cursor.execute(command)
                 return cursor.fetchone()
         return None
+
+    def is_one(self, table_name, element={}):
+        return self.get_one(table_name, element) != None
     
-    def update_all(self, table_name, element, value):
+    def update_all(self, table_name, value, element={}):
+        if len(value) == 0:
+            return
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
                 command = f"UPDATE { table_name } SET { assignments(value) }"
@@ -129,7 +136,7 @@ class database:
             connection.commit()
         return
 
-    def delete_all(self, table_name, element):
+    def delete_all(self, table_name, element={}):
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
                 command = f"DELETE FROM { table_name }"
