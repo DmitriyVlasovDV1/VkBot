@@ -5,6 +5,10 @@ import bot_settings
 from database import database
 
 class response_handler:
+    # Constants
+    self.USERNAME_MIN_LEN = 3;
+    self.USERNAME_FORBIDEN_SIGNS = set('!', '?', '.', ',', '\'', '"') # <-- Work for Svyatoslav here!!!
+    
     def __init__(self, db):
         self.session = vk.Session()
         self.api = vk.API(self.session, v='5.50')
@@ -34,6 +38,9 @@ class response_handler:
             self.session_default(user['phase'], data)
         elif user['session'] == 'help':
             self.session_help(user['phase'], data)
+        elif user['session'] == 'create_account':
+            self.session_create_account(user['phase'], data)
+        
         return
 
     def update_session(self, user_id, session, phase):
@@ -120,3 +127,42 @@ class response_handler:
             self.send_message(data['user_id'], f'Ваши ответы: {list[0]}, {list[1]}')
 
         return
+      
+    def session_create_account(self, phase, data):
+        if phase == 0:
+            self.send_message(data['user_id'], 'Enter your account name:')
+            self.update_session(data['user_id'], 'create_account', 1)
+            return;
+        if phase == 1:
+            if  data['body'] == '/quit':
+                self.update_session(data['user_id'], 'default', 0)
+                return
+            
+            if len(data['body']) < self.USERNAME_MIN_LEN:
+                self.send_message(data['user_id'], 'Your username too short')
+                return
+            
+            if data['body'].isdigit():
+                self.send_message(data['user_id'], 'Your account name should starts with a letter')
+                return
+            
+            if self.USERNAME_FORBIDEN_SIGNS.isdisjoint(data['body']):
+                self.send_message(data['user_id'], 'Your account name should starts with a letter')
+                return
+            
+            self.list_erase(data['user_id'])
+            self.list_push_back(data['user_id'], 'text', data['body'])
+
+            self.update_session(data['user_id'], 'create_account', 2)
+
+            self.send_message(data['user_id'], 'Enter your age:')
+            
+            return
+        
+        if phase == 2:
+            # <-- Work for my master here!!!
+            return
+        
+        return
+    
+          
