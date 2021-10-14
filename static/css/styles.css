@@ -95,7 +95,6 @@ body {
 }
 .header__item:nth-child(1) {
   flex-basis: 15%;
-  height: 60%;
 }
 .header__item:nth-child(2) {
   flex-basis: 50%;
@@ -109,7 +108,7 @@ body {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  height: 100%;
+  height: 70px;
 }
 .header__navbar {
   width: 100%;
@@ -164,6 +163,9 @@ body {
 .navbar__option:hover {
   color: #7eceff;
 }
+.navbar__option:visited {
+  color: white;
+}
 
 .content {
   margin-top: 2%;
@@ -178,11 +180,14 @@ body {
   height: 90%;
   margin: auto;
 }
-.content__item:nth-child(2) {
+.content__item_chat:nth-child(1) {
+  flex-basis: 30%;
+}
+.content__item_chat:nth-child(2) {
   flex-basis: 40%;
 }
-.content__item:nth-child(1) {
-  flex-basis: 30%;
+.content__item_statistics:nth-child(1) {
+  flex-basis: 40%;
 }
 
 .box {
@@ -205,7 +210,7 @@ body {
   overflow-y: scroll;
   overflow-x: hidden;
 }
-.box__sendbar {
+.box__bottom {
   display: flex;
   justify-content: center;
   height: 50px;
@@ -249,6 +254,7 @@ body {
   padding-right: 12px;
   padding-left: 12px;
   display: inline-block;
+  white-space: pre-wrap;
   clear: both;
   background-color: #404143;
   margin-top: 3px;
@@ -266,13 +272,27 @@ body {
   float: right;
   margin-right: 10px;
 }
-.messager__message:after {
-  display: block;
-  text-align: right;
-  content: "20:53";
+.messager__time {
+  font-size: 20;
+  padding-right: 12px;
+  padding-left: 12px;
+  display: inline-block;
+  white-space: pre-wrap;
+  clear: both;
+  margin-top: 1px;
+  margin-bottom: 10px;
+  border-radius: 20px;
+  color: #C4C4C4;
   font-size: 10px;
-  margin-top: 5px;
-  color: #a5a5a5;
+  font-family: "Roboto", sans-serif;
+}
+.messager__time_left {
+  float: left;
+  margin-left: 10px;
+}
+.messager__time_right {
+  float: right;
+  margin-right: 10px;
 }
 
 .user {

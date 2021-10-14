@@ -89,6 +89,9 @@ function updateSelector(response) {
     });
 
     selector.appendChild(fragment);
+
+    selector.scrollTop = selector.scrollHeight;
+
 }
 
 /* Chat */
@@ -144,20 +147,30 @@ function updateMessager(response) {
     const messages = response.messages;
     messages.forEach(msg => {
         const item = document.createElement('div');
-        item.innerHTML = msg.text;
+        const time = document.createElement('div');
+        const date = String(msg.date);
+        parsedDate = date.split(" ");
+        item.innerText = msg.text;
+        time.innerText = parsedDate[4] + " " + parsedDate[1] + " " + parsedDate[2];
+        console.log(date.split(" "));
+        console.log(typeof date);
         item.classList.add('messager__message');
-        if (msg.type == 'bot')
+        time.classList.add('messager__time');
+        if (msg.type == 'bot') {
             item.classList.add('messager__message_left');
-        else if (msg.type == 'user')
+            time.classList.add('messager__time_left');
+        }
+        else if (msg.type == 'user') {
             item.classList.add('messager__message_right');
+            time.classList.add('messager__time_right');
+        }
         fragment.appendChild(item);
+        fragment.appendChild(time);
     });
 
-    //messager.scrollTop = messager.scrollHeight;
-    //messager.scrollIntoView({block: "end"});
-    console.dir(messager);
-
     messager.appendChild(fragment);
+    messager.scrollTop = messager.scrollHeight;
+    console.dir(messager);
 }
 
 

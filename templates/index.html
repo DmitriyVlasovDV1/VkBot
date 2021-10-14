@@ -1,35 +1,32 @@
 
 <html>
     <head>
-        <link type="text/css" href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet"/>
+        <link type="text/css" href="/static/css/styles.css" rel="stylesheet"/>
         <title>No title</title>
     </head>
 
     <body>
         <div class="header">
             <div class="header__item">
-                <div class="header__logo">
-                </div>
+                <div class="header__logo"></div>
             </div>
             <div class="header__item">
                 <div class="header__navbar navbar">
-                    <div class="navbar__option navbar__option_active"><a>Чат</a></div>
-                    <div class="navbar__option"><a>Рассылки</a></div>
-                    <div class="navbar__option"><a>Уведомления</a></div>
-                    <div class="navbar__option"><a>Статиcтика</a></div>
-                    <div class="navbar__option"><a>Админы</a></div>
+                    <a class="navbar__option navbar__option_active">Чат</a>
+                    <a class="navbar__option">Рассылки</a>
+                    <a class="navbar__option"> Уведомления</a>
+                    <a class="navbar__option" href="/statistics">Статиcтика</a>
+                    <a class="navbar__option">Админы</a>
                 </div>
             </div>
             <div class="header__item">
                 <div class="header__account-outer">
-                    <div class="header__account-inner">
-
-                    </div>
+                    <div class="header__account-inner"></div>
                 </div>
             </div>
         </div>
         <div class="content">
-            <div class="content__item">
+            <div class="content__item content__item_chat">
                 <div class="box">
                     <div class="box__header">
                         <div class="boxheader">
@@ -44,11 +41,11 @@
                             <div class="box__icon box__icon_plane" id="button_delete_user"></div>
                         </div>
                     </div>
-                    <div class="selector__header"></div>
+                    <div class="box__bottom"></div>
                 </div>
             </div>
 
-            <div class="content__item">
+            <div class="content__item content__item_chat">
                 <div class="box">
                     <div class="box__header">
                         <div class="boxheader">
@@ -82,7 +79,7 @@
                         <div class="messager__message messager__message_right">Ok</div>
                         <div class="messager__message messager__message_right">Ok</div>
                     </div>
-                    <div class="box__sendbar">
+                    <div class="box__bottom">
                         <textarea class="box__input" id="textarea_message"> </textarea>    
                         <div class="box__icon box__icon_plane" id="button_message"></div>
                     </div>

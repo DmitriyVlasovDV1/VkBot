@@ -39,6 +39,7 @@ class database:
                                                 debug_user_name VARCHAR(255),\
                                                 type VARCHAR(255),\
                                                 text VARCHAR(255),\
+                                                date DATETIME,\
                                                 FOREIGN KEY (debug_user_name) REFERENCES debug_users (name) ON DELETE CASCADE)'    
                 cursor.execute(command)
 
@@ -143,7 +144,7 @@ class database:
                 if len(element) != 0:
                     command += " WHERE "
                     command += assignments(element, " AND ")
-                
+
                 cursor.execute(command)
             connection.commit()
         return

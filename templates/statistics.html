@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <link type="text/css" href="/static/css/styles.css" rel="stylesheet"/>
+        <title>No title</title>
+        {{ js_resources|indent(4)|safe }}
+        {{ css_resources|indent(4)|safe }}
+    </head>
+
+    <body>
+        <div class="header">
+            <div class="header__item">
+                <div class="header__logo"></div>
+            </div>
+            <div class="header__item">
+                <div class="header__navbar navbar">
+                    <a class="navbar__option" href="../">Чат</a>
+                    <a class="navbar__option">Рассылки</a>
+                    <a class="navbar__option">Уведомления</a>
+                    <a class="navbar__option navbar__option_active">Статиcтика</a>
+                    <a class="navbar__option">Админы</a>
+                </div>
+            </div>
+            <div class="header__item">
+                <div class="header__account-outer">
+                    <div class="header__account-inner"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="content">
+            <div class="content__item content__item_statistics">
+                <div class="box">
+                    <div class="box__header"></div>
+                    <div class="box__roll">
+                        {{plot_div|safe}}
+                    </div>
+                    <div class="box__bottom"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{plot_script|safe}}
+    </body>
+</html>

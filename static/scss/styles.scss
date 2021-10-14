@@ -22,6 +22,7 @@ body {
 }
 
 $stride: 0.8;
+$size_logo: 70px;
 $size_account: 80px;
 $size_search_bar: 70px;
 $messagecurve: 20px;
@@ -31,6 +32,7 @@ $lightbluecolor: #7eceff;
 $darkgreycolor: #222324;
 $greycolor: #404143;
 $lightgreycolor: #C4C4C4;
+$greencolor: rgb(62, 236, 100);
 
 .header {
     display: flex;
@@ -51,8 +53,6 @@ $lightgreycolor: #C4C4C4;
 
     &__item:nth-child(1) {
         flex-basis: 15%;
-        height: 60%;
-        
     }
 
     &__item:nth-child(2) {
@@ -70,7 +70,7 @@ $lightgreycolor: #C4C4C4;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
-        height: 100%;
+        height: $size_logo;
         //@extend %tmpldebug;
     }
 
@@ -136,6 +136,10 @@ $lightgreycolor: #C4C4C4;
     &__option:hover {
         color: $lightbluecolor;
     }
+
+    &__option:visited {
+        color:white;
+    }
 }
 
 .content {
@@ -154,15 +158,16 @@ $lightgreycolor: #C4C4C4;
         margin: auto;
     }
 
-    &__item:nth-child(2) {
+    &__item_chat:nth-child(1) {
+        flex-basis: 30%;
+    }
+    &__item_chat:nth-child(2) {
         flex-basis: 40%;
     }
 
-    &__item:nth-child(1) {
-        flex-basis: 30%;
+    &__item_statistics:nth-child(1) {
+        flex-basis: 40%;
     }
-
-    
 }
 
 .box {
@@ -175,8 +180,8 @@ $lightgreycolor: #C4C4C4;
 
     &__header {
         display: flex;
-
         justify-content: center;
+
         height: 50px;
         min-height: 50px;
         //@extend %tmpldebug;
@@ -193,7 +198,7 @@ $lightgreycolor: #C4C4C4;
         //@extend %tmpldebug;
     }
 
-    &__sendbar {
+    &__bottom {
         display: flex;
         justify-content: center;
 
@@ -203,7 +208,6 @@ $lightgreycolor: #C4C4C4;
 
         background-color: $greycolor;
         border-radius:  0 0 30px 30px;
-
     }
 
     &__input {
@@ -251,6 +255,7 @@ $lightgreycolor: #C4C4C4;
         padding-right: 12px;
         padding-left: 12px;
         display: inline-block;
+        white-space: pre-wrap;
         clear: both;
         background-color: $greycolor;
         margin-top: 3px;
@@ -271,15 +276,29 @@ $lightgreycolor: #C4C4C4;
         }
  
     }
-    
-    &__message:after {
-        display: block;
-        text-align: right;
-        content: '20:53';
-        font-size: 10px;
-        margin-top: 5px;
-        color:rgb(165, 165, 165);
 
+    &__time {
+        font-size: 20;
+        padding-right: 12px;
+        padding-left: 12px;
+        display: inline-block;
+        white-space: pre-wrap;
+        clear: both;
+        margin-top: 1px;
+        margin-bottom: 10px;
+        border-radius: $messagecurve;
+
+        @include text(10px, $lightgreycolor);
+
+        &_left {
+            float: left;
+            margin-left: 10px;
+        }
+        
+        &_right {
+            float: right;
+            margin-right: 10px;
+        }
     }
     
 }
