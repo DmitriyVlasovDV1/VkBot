@@ -1,0 +1,83 @@
+
+<html>
+    <head>
+        <link type="text/css" href="/static/css/styles.css" rel="stylesheet"/>
+        <meta charset="UTF-8">
+        <title>No title</title>
+    </head>
+
+    <body>
+        <div class="header">
+            <div class="header__item">
+                <div class="header__logo"></div>
+            </div>
+            <div class="header__item">
+                <div class="header__navbar navbar">
+                    <a class="navbar__option" href="/">Чат</a>
+                    <a class="navbar__option navbar__option_active">Рассылки</a>
+                    <a class="navbar__option"> Уведомления</a>
+                    <a class="navbar__option" href="/statistics">Статиcтика</a>
+                    <a class="navbar__option">Админы</a>
+                </div>
+            </div>
+            <div class="header__item">
+                <div class="header__account-outer">
+                    <div class="header__account-inner"></div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="content__item content__item_mailing">
+                <div class="box">
+                    <div class="box__header">
+                        <div class="boxheader">
+                            <input required class="boxheader__input" id="input_mailing_name" type="text" placeholder="Type new mailing's name ">
+                            <div class="box__icon icon_plus" id="button_add_mailing"></div>
+                        </div>
+                    </div>
+                    <div class="box__roll" id="selector">
+                        <div class="mailing">
+                            <div class="mailing__name">Tirex daily paper</div>
+                            <input class="checkbox" type="checkbox" id="button_mute_mailing">
+                            <div class="box__icon icon_plus" id="button_select_mailing"></div>
+                            <div class="box__icon icon_delete" id="button_delete_mailing"></div>
+                        </div>
+                    </div>
+                    <div class="box__bottom"></div>
+                </div>
+            </div>
+
+            <div class="content__item content__item_mailing">
+                <div class="box">
+                    <div class="box__header">
+                        <div class="boxheader">
+                            <div class="boxheader__mailingname" id="text_current_mailing">Tirex daily paper</div>
+                        </div>
+                    </div>
+                    <div class="box__roll messager" id="messager">
+                        <textarea class="messager__message messager__message_delayed" id="input_delmsg">Hello</textarea>
+                         <div class="messager__setting">
+                             <input type="datetime-local">
+                             <input class="checkbox" type="checkbox" id="button_mute_mailing">
+                            <div class="box__icon icon_plus" id="button_select_delmsg"></div>
+                            <div class="box__icon icon_delete" id="button_delete_delmsg"></div>
+                        </div>
+
+                        <textarea class="messager__message messager__message_delayed" id="input_delmsg">Hello</textarea>
+                         <div class="messager__setting">
+                             <input type="datetime-local">
+                             <input class="checkbox" type="checkbox" id="button_mute_mailing">
+                            <div class="box__icon icon_plus" id="button_select_delmsg"></div>
+                            <div class="box__icon icon_delete" id="button_delete_delmsg"></div>
+                        </div>
+
+                    </div>
+                    <div class="box__bottom box__bottom_mailing" id='add_message_button'>New message</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/mailing.js') }}"></script>
+    </body>
+</html>

@@ -76,12 +76,12 @@ function updateSelector(response) {
 
         const icon1 = document.createElement('div');
         icon1.classList.add('box__icon');
-        icon1.classList.add('box__icon_plane');
+        icon1.classList.add('icon_plus');
         icon1.addEventListener('click', ()=>{selectUser(user.name)});
 
         const icon2 = document.createElement('div');
         icon2.classList.add('box__icon');
-        icon2.classList.add('box__icon_plane');
+        icon2.classList.add('icon_delete');
         icon2.addEventListener('click', ()=>{deleteUser(user.name)});
 
         item.append(name, icon1, icon2);

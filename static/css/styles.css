@@ -189,6 +189,12 @@ body {
 .content__item_statistics:nth-child(1) {
   flex-basis: 40%;
 }
+.content__item_mailing:nth-child(1) {
+  flex-basis: 20%;
+}
+.content__item_mailing:nth-child(2) {
+  flex-basis: 40%;
+}
 
 .box {
   display: flex;
@@ -218,6 +224,17 @@ body {
   background-color: #404143;
   border-radius: 0 0 30px 30px;
 }
+.box__bottom_mailing {
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  align-items: center;
+}
+.box__bottom_mailing:hover {
+  color: #5ecd32;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+}
 .box__input {
   background: none;
   resize: none;
@@ -237,14 +254,34 @@ body {
   width: 40px;
   height: 60%;
 }
-.box__icon_plane {
+
+.icon_plane {
   background-image: url("/static/images/message_plane.png");
 }
-.box__icon_plus {
-  background-image: url("/static/images/message_plane.png");
-}
-.box__icon:hover {
+.icon_plane:hover {
   background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%), url("/static/images/message_plane.png");
+}
+
+.icon_plus {
+  background-image: url("/static/images/plus_button.png");
+}
+.icon_plus:hover {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%), url("/static/images/plus_button.png");
+}
+
+.icon_delete {
+  background-image: url("/static/images/delete_button.png");
+}
+.icon_delete:hover {
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%), url("/static/images/delete_button.png");
+}
+
+.checkbox {
+  margin-left: 15px;
+  margin-right: 15px;
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
 }
 
 .messager__message {
@@ -253,12 +290,15 @@ body {
   padding-bottom: 15px;
   padding-right: 12px;
   padding-left: 12px;
-  display: inline-block;
   white-space: pre-wrap;
   clear: both;
   background-color: #404143;
   margin-top: 3px;
   margin-bottom: 3px;
+  display: inline-block;
+  resize: none;
+  overflow: hidden;
+  width: 300px;
   color: white;
   font-size: 20px;
   font-family: "Roboto", sans-serif;
@@ -271,6 +311,26 @@ body {
 .messager__message_right {
   float: right;
   margin-right: 10px;
+}
+.messager__message_delayed {
+  float: left;
+  margin-left: 10px;
+  border-style: solid;
+  border-width: 2px;
+  border-color: #5ecd32;
+}
+.messager__setting {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  clear: both;
+  height: 50px;
+  background-color: #404143;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
 }
 .messager__time {
   font-size: 20;
@@ -302,6 +362,8 @@ body {
   height: 50px;
   background-color: #404143;
   margin-top: 5px;
+  margin-left: 3px;
+  margin-right: 3px;
   color: white;
   font-size: 20px;
   font-family: "Roboto", sans-serif;
@@ -312,7 +374,7 @@ body {
   flex-grow: 1;
   margin-left: 15px;
   margin-right: 15px;
-  color: yellowgreen;
+  color: #5ecd32;
 }
 
 .boxheader {
@@ -333,6 +395,12 @@ body {
   font-size: 20px;
   font-family: "Roboto", sans-serif;
 }
+.boxheader__mailingname {
+  text-align: center;
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+}
 .boxheader__input {
   background: none;
   size: 10;
@@ -344,6 +412,28 @@ body {
   color: #C4C4C4;
   font-size: 15px;
   font-family: "Roboto", sans-serif;
+}
+
+.mailing {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-left: 3px;
+  margin-right: 3px;
+  height: 50px;
+  background-color: #404143;
+  margin-top: 5px;
+  color: white;
+  font-size: 20px;
+  font-family: "Roboto", sans-serif;
+  border-radius: 20px;
+}
+.mailing__name {
+  flex-basis: 50%;
+  flex-grow: 1;
+  margin-left: 15px;
+  margin-right: 15px;
+  color: #5ecd32;
 }
 
 /* для Chrome/Edge/Safari */

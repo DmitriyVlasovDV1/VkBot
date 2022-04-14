@@ -53,6 +53,10 @@ def bot_chat():
             return response
 
         if data['type'] == 'delete_user':
+            if session['current_user'] == data['user_name']:
+                session['current_user'] = ''
+
+
             name = data['user_name'].strip()
             debug_user = db.get_one('debug_users', {'name': name})
             db.delete_all('users', {'id': debug_user['user_id']})
@@ -103,3 +107,78 @@ def bot_statistics():
         plot_script=plot_script,
         js_resources=statistics.INLINE.render_js(),
         css_resources=statistics.INLINE.render_css())
+
+
+@app.route('/mailing', methods=["POST", "GET"])
+def bot_mailing():
+    if request.method == "POST":
+        if not request.is_json:
+            return ''
+
+        data = json.loads(request.data)
+
+        if 'type' not in data:
+            return ''
+
+        if 'current_mailing_id' not in session:
+            session['current_mailing_id'] = -1
+
+        if data['type'] == 'update':
+            mailings = db.get_all('mailings')
+            response = {'mailings': mailings}
+            return response
+
+        if data['type'] == 'add_mailing':
+            name = data['mailing_name'].strip()
+            if not db.is_one('mailings', {'name': name}):
+                db.add_one('mailings', {'name': name, 'is_active': 0})
+
+            mailings = db.get_all('mailings')
+            response = {'mailings': mailings}
+            return response
+
+        if data['type'] == 'delete_mailing':
+            mailing = data['mailing']
+            if db.is_one('mailings', {'id': mailing['id']}):
+                db.delete_all('mailings', {'id': mailing['id']})
+
+            mailings = db.get_all('mailings')
+            response = {'mailings': mailings}
+            return response
+
+        if data['type'] == 'update_mailing':
+            mailing = data['mailing']
+            if db.is_one('mailings', {'id': mailing['id']}):
+                db.update_all('mailings', {'is_active': mailing['is_active'], 'name': mailing['name']}, {'id': mailing['id']})
+
+            mailings = db.get_all('mailings')
+            response = {'mailings': mailings}
+            return response
+
+        if data['type'] == 'select_mailing':
+            mailing = data['mailing']
+            if db.is_one('mailings', {'id': mailing['id']}):
+                session['current_mailing_id'] = mailing['id']
+                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                response = {'current_mailing': mailing, 'messages': messages}
+                return response
+            return {}
+
+        if data['type'] == 'add_message':
+            if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
+                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
+                db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'text': 'Text you want to send for your slaves...', 'is_active': 0})
+                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                response = {'current_mailing': mailing, 'messages': messages}
+                return response
+
+        if data['type'] == 'update_message':
+            if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
+                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
+                msg = data['message']
+                db.update_all('mailing_messages', {'text': msg['text'], 'is_active': msg['is_active']}, {'id': msg['id']})
+                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                response = {'current_mailing': mailing, 'messages': messages}
+                return response
+
+    return render_template('mailing.html')

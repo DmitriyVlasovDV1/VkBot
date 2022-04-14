@@ -6,10 +6,6 @@ from database import database
 from datetime import datetime 
 
 class response_handler:
-    # Constants
-    self.USERNAME_MIN_LEN = 3;
-    self.USERNAME_FORBIDEN_SIGNS = set('!', '?', '.', ',', '\'', '"') # <-- Work for Svyatoslav here!!!
-    
     def __init__(self, db):
         self.session = vk.Session()
         self.api = vk.API(self.session, v='5.50')
@@ -50,14 +46,6 @@ class response_handler:
             if user['session'] != 'default':
                 self.update_session(user['id'], 'default', 0)
             self.session_default(user['phase'], data)
-<<<<<<< HEAD
-=======
-        elif user['session'] == 'help':
-            self.session_help(user['phase'], data)
-        elif user['session'] == 'create_account':
-            self.session_create_account(user['phase'], data)
-        
->>>>>>> a3e331b8fcb726c1c7eb59a3bcc58cb24d104e30
         return
 
     def update_session(self, user_id, session, phase):
@@ -188,13 +176,15 @@ class response_handler:
         # information
         if phase == 0:
 
-            user_and_mail = self.db.get_all('mailing', {'user_id': data['user_id']})
+            self.db.numerate_all('mailings', 'num', {'is_active': 1})
+
+            user_and_mail = self.db.get_all('mailing_and_user', {'user_id': data['user_id']})
 
             user_mailings = []
             for link in user_and_mail:
-                user_mailings.append(self.db.get_one('storage', {'id': link['storage_id']}))
+                user_mailings.append(self.db.get_one('mailings', {'id': link['mailing_id'], 'is_active': 1}))
 
-            mailings = self.db.get_all('storage', {'type': 'mailing'})
+            mailings = self.db.get_all('mailings', {'is_active': 1})
 
             available = []
             for ml in mailings:
@@ -204,7 +194,7 @@ class response_handler:
             message = "Доступные рассылки:\n"
             if len(available):
                 for ml in available:
-                    message += str(ml['num']) + ') ' + ml['text'] + '\n'
+                    message += str(ml['num']) + ') ' + ml['name'] + '\n'
             else:
                 message += "Нет доступных рассылок ¯\_(ツ)_/¯\n"
 
@@ -212,7 +202,7 @@ class response_handler:
 
             if len(user_mailings):
                 for ml in user_mailings:
-                    message += str(ml['num']) + ') ' + ml['text'] + '\n'
+                    message += str(ml['num']) + ') ' + ml['name'] + '\n'
             else:
                 message += "У вас нет подписок ¯\_(ツ)_/¯\n"
 
@@ -247,17 +237,17 @@ class response_handler:
 
 
             if cmd[0] == "/sub":
-                storage = self.db.get_one('storage', {'type': 'mailing', 'num': cmd[1]})
-                if storage != None:
-                    self.db.add_one('mailing', {'user_id': data['user_id'], 'storage_id': storage['id']})
+                mailing = self.db.get_one('mailings', {'is_active': 1, 'num': cmd[1]})
+                if mailing != None:
+                    self.db.add_one('mailing_and_user', {'user_id': data['user_id'], 'mailing_id': mailing['id']})
                 self.update_session(data['user_id'], 'mailing', 0)
                 self.run_session(data)
                 return
 
             if cmd[0] == "/unsub":
-                storage = self.db.get_one('storage', {'type': 'mailing', 'num': cmd[1]})
-                if storage != None:
-                    self.db.delete_all('mailing', {'user_id': data['user_id'], 'storage_id': storage['id']})
+                mailing = self.db.get_one('mailings', {'is_active': 1, 'num': cmd[1]})
+                if mailing != None:
+                    self.db.delete_all('mailing_and_user', {'user_id': data['user_id'], 'mailing_id': mailing['id']})
                 self.update_session(data['user_id'], 'mailing', 0)
                 self.run_session(data)
                 return
@@ -271,20 +261,24 @@ class response_handler:
             message = \
 '''Возможные команды:
 - '/singin': Войти в аккаунт
-- '/singup': Создать аккаунт
+- '/singout':
 - '/quit': Выйти из раздела 'аккаунт'
 '''
             self.send_message(data['user_id'], message)
             self.update_session(data['user_id'], 'account', 1)
             return
-        
-        if phase == 1:
 
+        if phase == 1:
             # handle response
-            if data['body'] not in ['/singin', '/singout']:
+            if data['body'] not in ['/singin', '/singup']:
                 self.update_session(data['user_id'], 'account', 0)
                 self.run_session()
+                return
 
+            if data['body'] == '/singup':
+                self.update_session(data['user_id'], 'account', 2)
+                self.run_session()
+                return
 
         return
     # end of 'session_account' function
@@ -328,46 +322,4 @@ class response_handler:
             self.send_message(data['user_id'], f'Ваши ответы: {list[0]}, {list[1]}')
 
         return
-<<<<<<< HEAD
         '''
-=======
-      
-    def session_create_account(self, phase, data):
-        if phase == 0:
-            self.send_message(data['user_id'], 'Enter your account name:')
-            self.update_session(data['user_id'], 'create_account', 1)
-            return;
-        if phase == 1:
-            if  data['body'] == '/quit':
-                self.update_session(data['user_id'], 'default', 0)
-                return
-            
-            if len(data['body']) < self.USERNAME_MIN_LEN:
-                self.send_message(data['user_id'], 'Your username too short')
-                return
-            
-            if data['body'].isdigit():
-                self.send_message(data['user_id'], 'Your account name should starts with a letter')
-                return
-            
-            if self.USERNAME_FORBIDEN_SIGNS.isdisjoint(data['body']):
-                self.send_message(data['user_id'], 'Your account name should starts with a letter')
-                return
-            
-            self.list_erase(data['user_id'])
-            self.list_push_back(data['user_id'], 'text', data['body'])
-
-            self.update_session(data['user_id'], 'create_account', 2)
-
-            self.send_message(data['user_id'], 'Enter your age:')
-            
-            return
-        
-        if phase == 2:
-            # <-- Work for my master here!!!
-            return
-        
-        return
-    
-          
->>>>>>> a3e331b8fcb726c1c7eb59a3bcc58cb24d104e30

@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
 %tmpldebug {
-    //background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
+//    background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
 }
 
 @mixin text($size, $color) {
@@ -32,7 +32,13 @@ $lightbluecolor: #7eceff;
 $darkgreycolor: #222324;
 $greycolor: #404143;
 $lightgreycolor: #C4C4C4;
-$greencolor: rgb(62, 236, 100);
+$greencolor: rgb(94, 205, 50);
+
+$icon_logo: url("/static/images/logo.png");
+$icon_account: url("/static/images/account.jpg");
+$icon_plane_button: url("/static/images/message_plane.png");
+$icon_plus_button: url("/static/images/plus_button.png");
+$icon_delete_button: url("/static/images/delete_button.png");
 
 .header {
     display: flex;
@@ -66,7 +72,7 @@ $greencolor: rgb(62, 236, 100);
     }
 
     &__logo {
-        background-image: url("/static/images/logo.png");
+        background-image: $icon_logo;
         background-size: contain;
         background-position: center;
         background-repeat: no-repeat;
@@ -94,7 +100,7 @@ $greencolor: rgb(62, 236, 100);
 
     }
     &__account-inner {
-        background-image: url("/static/images/account.jpg");
+        background-image: $icon_account;
         background-size: cover;
         background-position: center;
 
@@ -111,7 +117,7 @@ $greencolor: rgb(62, 236, 100);
     }
 
     &__account-inner:hover {
-        background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 100%), url('/static/images/account.jpg');
+        background-image: radial-gradient(circle, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 100%), $icon_account;
         //background: radial-gradient(circle, rgba(0,255,252,0) 0%, rgba(255,255,255,1) 76%, rgba(0,212,255,0) 100%);
     }
 }
@@ -168,6 +174,14 @@ $greencolor: rgb(62, 236, 100);
     &__item_statistics:nth-child(1) {
         flex-basis: 40%;
     }
+
+    &__item_mailing:nth-child(1) {
+        flex-basis: 20%;
+    }
+
+    &__item_mailing:nth-child(2) {
+        flex-basis: 40%;
+    }
 }
 
 .box {
@@ -208,6 +222,17 @@ $greencolor: rgb(62, 236, 100);
 
         background-color: $greycolor;
         border-radius:  0 0 30px 30px;
+
+        &_mailing {
+            @include text(20px, white);
+            align-items: center;
+            @extend %tmpldebug;
+
+            &:hover {
+                @include text(20px, $greencolor);
+            }
+        }
+
     }
 
     &__input {
@@ -233,20 +258,43 @@ $greencolor: rgb(62, 236, 100);
         @extend %tmpldebug;
     }
 
-    &__icon_plane {
-        background-image: url("/static/images/message_plane.png");
-    }
-
-    &__icon_plus {
-        background-image: url("/static/images/message_plane.png");
-    }
-
-
-    &__icon:hover {
-        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), url('/static/images/message_plane.png');
-    }
-
 }
+
+.icon_plane {
+    background-image: $icon_plane_button;
+
+    &:hover {
+        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plane_button;
+    }
+}
+
+.icon_plus {
+    background-image: $icon_plus_button;
+
+    &:hover {
+        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plus_button;
+    }
+}
+
+.icon_delete {
+    background-image: $icon_delete_button;
+
+    &:hover {
+        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_delete_button;
+    }
+}
+
+.checkbox {
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    @extend %tmpldebug;
+}
+
+
+
 .messager {
     &__message {
         font-size: 20;
@@ -254,28 +302,59 @@ $greencolor: rgb(62, 236, 100);
         padding-bottom: 15px;
         padding-right: 12px;
         padding-left: 12px;
-        display: inline-block;
         white-space: pre-wrap;
         clear: both;
         background-color: $greycolor;
         margin-top: 3px;
         margin-bottom: 3px;
+        display: inline-block;
+        resize: none;
+        overflow: hidden;
+        width: 300px;
 
         @include text(20px, white);
-
         border-radius: $messagecurve;
         
         &_left {
             float: left;
             margin-left: 10px;
         }
-        
+
         &_right {
+
             float: right;
             margin-right: 10px;
         }
+
+        &_delayed {
+            float: left;
+            margin-left: 10px;
+            border-style: solid;
+            border-width: 2px;
+            border-color: $greencolor;
+        }
  
     }
+
+    &__setting {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        clear: both;
+
+        height: 50px;
+
+        background-color: $greycolor;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    
+        //@extend %tmpldebug;
+    
+        @include text(20px, white);
+    
+    }
+
 
     &__time {
         font-size: 20;
@@ -303,6 +382,7 @@ $greencolor: rgb(62, 236, 100);
     
 }
 
+
 .user {
     display: flex;
     justify-content: space-around;
@@ -312,6 +392,10 @@ $greencolor: rgb(62, 236, 100);
 
     background-color: $greycolor;
     margin-top: 5px;
+
+    margin-left: 3px;
+    margin-right: 3px;
+
 
 
     //@extend %tmpldebug;
@@ -325,7 +409,7 @@ $greencolor: rgb(62, 236, 100);
         flex-grow: 1;
         margin-left: 15px;
         margin-right: 15px;
-        color:yellowgreen;
+        color: $greencolor;
         @extend %tmpldebug;
     }
 }
@@ -352,6 +436,11 @@ $greencolor: rgb(62, 236, 100);
         //@extend %tmpldebug;
     }
 
+    &__mailingname {
+        text-align: center;
+        @include text(20px, white);
+    }
+
     &__input {
         background: none;
         size: 10;
@@ -362,7 +451,35 @@ $greencolor: rgb(62, 236, 100);
     &__input::placeholder {
         @include text(15px, $lightgreycolor)
     }
+}
 
+.mailing {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-left: 3px;
+    margin-right: 3px;
+
+    height: 50px;
+
+    background-color: $greycolor;
+    margin-top: 5px;
+
+
+    //@extend %tmpldebug;
+
+    @include text(20px, white);
+
+    border-radius: $messagecurve;
+
+    &__name {
+        flex-basis: 50%;
+        flex-grow: 1;
+        margin-left: 15px;
+        margin-right: 15px;
+        color:$greencolor;
+        @extend %tmpldebug;
+    }
 
 }
 

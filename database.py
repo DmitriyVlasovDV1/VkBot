@@ -25,7 +25,7 @@ class database:
                 command = 'CREATE TABLE IF NOT EXISTS real_users (\
                                                 vk_id INT PRIMARY KEY,\
                                                 user_id INT,\
-                                                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE)'    
+                                                FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE)'
                 cursor.execute(command)
 
                 command = 'CREATE TABLE IF NOT EXISTS debug_users (\
@@ -40,7 +40,7 @@ class database:
                                                 type VARCHAR(255),\
                                                 text VARCHAR(255),\
                                                 date DATETIME,\
-                                                FOREIGN KEY (debug_user_name) REFERENCES debug_users (name) ON DELETE CASCADE)'    
+                                                FOREIGN KEY (debug_user_name) REFERENCES debug_users (name) ON DELETE CASCADE)'
                 cursor.execute(command)
 
                 command = 'CREATE TABLE IF NOT EXISTS list (\
@@ -67,16 +67,31 @@ class database:
                                                 text VARCHAR(255))'
                 cursor.execute(command)
 
-                command = 'CREATE TABLE IF NOT EXISTS mailing (\
+                command = 'CREATE TABLE IF NOT EXISTS mailings (\
+                                                id INT PRIMARY KEY AUTO_INCREMENT,\
+                                                num INT,\
+                                                name VARCHAR(255),\
+                                                is_active BOOL)'
+                cursor.execute(command)
+
+                command = 'CREATE TABLE IF NOT EXISTS mailing_messages (\
+                                                id INT PRIMARY KEY AUTO_INCREMENT,\
+                                                mailing_id INT,\
+                                                is_active BOOL,\
+                                                text VARCHAR(255),\
+                                                date DATETIME,\
+                                                FOREIGN KEY (mailing_id) REFERENCES mailings (id) ON DELETE CASCADE)'
+                cursor.execute(command)
+
+                command = 'CREATE TABLE IF NOT EXISTS mailing_and_user (\
                                                 id INT PRIMARY KEY AUTO_INCREMENT,\
                                                 user_id INT,\
-                                                storage_id INT,\
+                                                mailing_id INT,\
                                                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,\
-                                                FOREIGN KEY (storage_id) REFERENCES storage (id) ON DELETE CASCADE)'
+                                                FOREIGN KEY (mailing_id) REFERENCES mailings (id) ON DELETE CASCADE)'
                 cursor.execute(command)
             connection.commit()
 
-    
     def get_connection(self):
         return pymysql.connect(
             host=bot_settings.DB_HOST,
@@ -118,7 +133,7 @@ class database:
 
                 cursor.execute(command)
                 return cursor.fetchone()
-        return None
+        return
 
     def is_one(self, table_name, element={}):
         return self.get_one(table_name, element) != None
@@ -149,5 +164,18 @@ class database:
             connection.commit()
         return
 
- 
+    def numerate_all(self, table_name, field_name='num', element={}):
+        with self.get_connection() as connection:
+            with connection.cursor() as cursor:
+                command1 = f"SET @row_num := 0"
+                command2 = f"UPDATE { table_name } SET { field_name } = (@row_num := @row_num + 1)"
+                if len(element) != 0:
+                    command2 += " WHERE "
+                    command2 += assignments(element, " AND ")
+
+                cursor.execute(command1)
+                cursor.execute(command2)
+            connection.commit()
+        return
+
 db = database()
