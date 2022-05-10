@@ -56,7 +56,6 @@ def bot_chat():
             if session['current_user'] == data['user_name']:
                 session['current_user'] = ''
 
-
             name = data['user_name'].strip()
             debug_user = db.get_one('debug_users', {'name': name})
             db.delete_all('users', {'id': debug_user['user_id']})
@@ -115,70 +114,130 @@ def bot_mailing():
         if not request.is_json:
             return ''
 
+        # get data
         data = json.loads(request.data)
 
         if 'type' not in data:
             return ''
 
+        # init current mailing id
         if 'current_mailing_id' not in session:
             session['current_mailing_id'] = -1
 
+        # req for update (selector)
         if data['type'] == 'update':
             mailings = db.get_all('mailings')
-            response = {'mailings': mailings}
+            response = {'mailings': mailings, 'exeError': ''}
             return response
 
+        # req for add new mailing
         if data['type'] == 'add_mailing':
             name = data['mailing_name'].strip()
+            execution_error = ''
             if not db.is_one('mailings', {'name': name}):
                 db.add_one('mailings', {'name': name, 'is_active': 0})
+            else:
+                execution_error = 'existing name'
 
             mailings = db.get_all('mailings')
-            response = {'mailings': mailings}
+            response = {'mailings': mailings, 'exeError': execution_error}
             return response
 
+        # req for deleting mailing
         if data['type'] == 'delete_mailing':
             mailing = data['mailing']
             if db.is_one('mailings', {'id': mailing['id']}):
                 db.delete_all('mailings', {'id': mailing['id']})
 
             mailings = db.get_all('mailings')
-            response = {'mailings': mailings}
+            response = {'mailings': mailings, 'exeError': ''}
             return response
 
+        # req for update mailing
         if data['type'] == 'update_mailing':
             mailing = data['mailing']
             if db.is_one('mailings', {'id': mailing['id']}):
                 db.update_all('mailings', {'is_active': mailing['is_active'], 'name': mailing['name']}, {'id': mailing['id']})
 
             mailings = db.get_all('mailings')
-            response = {'mailings': mailings}
+            response = {'mailings': mailings, 'exeError': ''}
             return response
 
+        # req for selecting mailing
         if data['type'] == 'select_mailing':
             mailing = data['mailing']
             if db.is_one('mailings', {'id': mailing['id']}):
                 session['current_mailing_id'] = mailing['id']
                 messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
-                response = {'current_mailing': mailing, 'messages': messages}
+                response = {'current_mailing': mailing, 'messages': messages, 'exeError':''}
                 return response
             return {}
 
+        # req for adding message
         if data['type'] == 'add_message':
+
+            msg = data['message']
+            name = msg['name']
+            text = msg['text']
+            is_active = msg['is_active']
+            time = msg['time']
+
+            execution_error = ''
+
             if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
                 mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
-                db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'text': 'Text you want to send for your slaves...', 'is_active': 0})
+
+                if db.is_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}):
+                    execution_error = 'existing name'
+                else:
+                    if time != None:
+                        db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active, 'time': time})
+                    else:
+                        db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active})
+
                 messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
-                response = {'current_mailing': mailing, 'messages': messages}
+                response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
+                res_hand.setup_mailing_scheduler()
                 return response
 
+        # req for update message
         if data['type'] == 'update_message':
+            msg = data['message']
+            name = msg['name']
+            text = msg['text']
+            is_active = msg['is_active']
+            time = msg['time']
+
+            execution_error = ''
             if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
                 mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
-                msg = data['message']
-                db.update_all('mailing_messages', {'text': msg['text'], 'is_active': msg['is_active']}, {'id': msg['id']})
+                if db.is_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}) and \
+                    (db.get_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}))['id'] != msg['id']:
+                    execution_error = 'existing name'
+                else:
+                    db.update_all('mailing_messages', {'name': name, 'text': text, 'is_active': is_active, 'time': time}, {'id': msg['id']})
                 messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
-                response = {'current_mailing': mailing, 'messages': messages}
+                response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
+                res_hand.setup_mailing_scheduler()
                 return response
+
+        # req for deleting message
+        if data['type'] == 'delete_message':
+            msg = data['message']
+            execution_error = ''
+
+            if session['current_mailing_id'] != -1:
+                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
+                db.delete_all('mailing_messages', {'id': msg['id']})
+                messages = db.get_all('mailing_messages', {'mailing_id':  mailing['id']})
+                response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
+                res_hand.setup_mailing_scheduler()
+                return response
+
+        # req for sending message
+        if data['type'] == 'send_message':
+            res_hand.send_mailing_message(data['message'])
+            return {}
+
 
     return render_template('mailing.html')

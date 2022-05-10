@@ -26,7 +26,6 @@ function createPost(body, cb={}) {
 
 
 /* Selector */
-
 butttonAddUser.addEventListener('click', () => {
     if (inputUserName.value === '')
         return;

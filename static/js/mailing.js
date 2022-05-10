@@ -1,63 +1,197 @@
 const inputMailingName = document.getElementById('input_mailing_name');
-const buttonAddMailing = document.getElementById('button_add_mailing');
+const currentMailingName = document.getElementById('current_mailing_name');
 const selector = document.getElementById('selector');
-const messanger = document.getElementById('messager')
-const textCurrentMailing = document.getElementById('text_current_mailing')
-const buttonAddMessage = document.getElementById('add_message_button')
 
-const textareas =  Array.from(document.getElementsByTagName('textarea'));
+const messager = document.getElementById('messager');
 
-textareas.forEach(txt => {
-    txt.addEventListener('keydown', resize);
-    });
+const editorMessageName = document.getElementById('editor_message_name');
+const editorMessageText = document.getElementById('editor_message_text');
+const editorMessageFlag = document.getElementById('editor_message_flag');
+const editorMessageTime = document.getElementById('editor_message_time');
 
-function resize() {
-  var el = this;
-  setTimeout(function() {
-    el.style.height = 'auto';
-    el.style.height = el.scrollHeight;
-  }, 1);
+const buttonAddMessage = document.getElementById('add_message_button');
+const buttonEditorSave = document.getElementById("button_editor_save");
+const buttonEditorClose = document.getElementById("button_editor_close");
+const editorWindow = document.getElementById("editor_window");
+
+
+let selectedMailing = null;
+let selectedMessage = null;
+
+
+
+// create html block function
+function createDiv()
+{
+    const res = document.createElement('div');
+
+    for (var i = 0; i < arguments.length; i++) {
+        res.classList.add(arguments[i]);
+    }
+
+    return res;
 }
 
-
-function createPost(body, cb={}) {
+// creating post requestion function
+function createPost(body, cb=null) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://127.0.0.1:5000/mailing');
     xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
 
     xhr.addEventListener('load', () => {
         const response = JSON.parse(xhr.response);
-        cb(response);
+        if (cb != null)
+            cb(response);
     })
     xhr.addEventListener('error', () => {
         console.log('ERROR!!!');
     });
-    
+
     xhr.send(JSON.stringify(body));
+} // end of createPost function
+
+// button add message
+buttonAddMessage.addEventListener('click', () => {
+    if (selectedMailing !== null)
+        openEditor();
+});
+
+// close popup window editing message
+buttonEditorClose.addEventListener('click', () => {
+    closeEditor();
+});
+
+buttonEditorSave.addEventListener('click', () => {
+    if (editMessage())
+        closeEditor();
+});
+
+// Open and close editor
+function openEditor() {
+    editorWindow.classList.remove("popup_close");
+
+    if (selectedMessage === null) {
+        editorMessageName.value = '';
+        editorMessageText.value = '';
+        editorMessageFlag.value = false;
+        editorMessageTime.value = '';
+    } else {
+        editorMessageName.value = selectedMessage.name;
+        editorMessageText.value = selectedMessage.text;
+        editorMessageFlag.value = selectedMessage.is_active;
+        editorMessageTime.value = new Date(selectedMessage.time).toISOString().substring(0, 19);
+    }
+
+
+}
+
+function closeEditor() {
+    editorWindow.classList.add("popup_close");
+    selectedMessage = null;
 }
 
 
-/* Selector */
-buttonAddMailing.addEventListener('click', () => {
-    console.log('hello');
-    if (inputMailingName.value === '')
-        return;
+// add/edit message function
+function editMessage() {
+    if (editorMessageName.value.trim() === '') {
+        alert( "Название должно цеплять" );
+        return false;
+    }
 
-    const body = {
-        type: 'add_mailing',
-        mailing_name: inputMailingName.value
-    };
-    inputMailingName.value = '';
-    createPost(body, updateSelector);
+    if (editorMessageText.value.trim() === '') {
+        alert( "Содержание должно умилять" );
+        return false;
+    }
+
+    console.log(editorMessageTime.value );
+
+    if (selectedMessage === null) {
+        time = null
+        if (editorMessageTime.value !== '')
+            time = editorMessageTime.value.slice(0, 19).replace('T', ' ') + ':00'
+
+        message = {
+            name: editorMessageName.value,
+            text: editorMessageText.value,
+            is_active: editorMessageFlag.value,
+            time: time
+        }
+
+        addMessage(message);
+    } else {
+        time = null
+        if (editorMessageTime.value !== '')
+            time = editorMessageTime.value.slice(0, 19).replace('T', ' ') + ':00'
+        message = {
+            id: selectedMessage.id,
+            name: editorMessageName.value,
+            text: editorMessageText.value,
+            is_active: editorMessageFlag.value,
+            time: time
+        }
+        updateMessage(message);
+    }
+
+    return true;
+}
+
+// add mailing button
+inputMailingName.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        if (inputMailingName.value.trim() === '') {
+            alert( "Название должно вдохновлять" );
+            return;
+        }
+
+        const body = {
+            type: 'add_mailing',
+            mailing_name: inputMailingName.value.trim()
+        };
+        createPost(body, updateSelector);
+
+        inputMailingName.value = '';
+    }
 });
 
-buttonAddMessage.addEventListener('click', () => {
-    const body = {
-        type: 'add_message'
-    };
-    createPost(body, updateMessager);
-})
 
+// send message
+function sendMessage(msg) {
+    const body = {
+        type: 'send_message',
+        message: msg
+    }
+    createPost(body);
+}
+
+// add message
+function addMessage(msg) {
+    const body = {
+        type: 'add_message',
+        message: msg
+    }
+    createPost(body, updateMessager);
+}
+
+// update message
+function updateMessage(msg) {
+    const body = {
+        type: 'update_message',
+        message: msg
+    }
+    createPost(body, updateMessager);
+}
+
+// delete message
+function deleteMessage(msg) {
+    const body = {
+        type: 'delete_message',
+        message: msg
+    }
+    createPost(body, updateMessager);
+}
+
+
+// delete mailig function
 function deleteMailing(mailing) {
     const body = {
         type: 'delete_mailing',
@@ -66,6 +200,7 @@ function deleteMailing(mailing) {
     createPost(body, updateSelector);
 }
 
+// select mailing function
 function selectMailing(mailing) {
     const body = {
         type: 'select_mailing',
@@ -74,9 +209,19 @@ function selectMailing(mailing) {
     createPost(body, updateMessager);
 }
 
+// update mailing function
 function updateMailing(mailing) {
     const body = {
         type: 'update_mailing',
+        mailing: mailing
+    };
+    createPost(body, updateSelector);
+}
+
+// add message function
+function deleteMailing(mailing) {
+    const body = {
+        type: 'delete_mailing',
         mailing: mailing
     };
     createPost(body, updateSelector);
@@ -91,44 +236,49 @@ function updateMessage(msg) {
 }
 
 
+// update selector function
 function updateSelector(response) {
-    if (!response.mailings) {
+    if (!('mailings' in response && 'exeError' in response)) {
         console.log("Error: wrong response format");
         return;
     }
 
-    selector.innerHTML = ''
+    if (response.exeError === 'existing name')
+        alert("Name is already existed");
+
+    selector.innerHTML = '';
 
     const fragment = document.createDocumentFragment();
     const mailings = response.mailings;
     mailings.forEach(mailing => {
-        const item = document.createElement('div');
-        item.classList.add('mailing');
+        const item = createDiv('roller__item');
+        const tag = createDiv('tag_mailing');
+        
+        const nameItem = createDiv("clickable_text", "tag_mailing_item");
+        nameItem.innerText = mailing.name;
+        nameItem.addEventListener('click', () => {
+            selectMailing(mailing);
+        });
 
-        const name = document.createElement('div');
-        name.classList.add('mailing__name');
-        name.innerHTML = mailing.name;
-
-        const checkbox = document.createElement('input');
-        checkbox.classList.add('checkbox');
-        checkbox.type = 'checkbox';
-        checkbox.checked = mailing.is_active;
-        checkbox.addEventListener('click', ()=>{
-            mailing.is_active = checkbox.checked;
+        const inputItem = document.createElement('input');
+        inputItem.classList.add('checkbox', "tag_mailing_item");
+        inputItem.type = 'checkbox';
+        inputItem.checked = mailing.is_active;
+        inputItem.addEventListener("change", () => {
+            mailing.is_active = inputItem.checked;
             updateMailing(mailing);
         });
 
-        const icon1 = document.createElement('div');
-        icon1.classList.add('box__icon');
-        icon1.classList.add('icon_plus');
-        icon1.addEventListener('click', ()=>{selectMailing(mailing)});
+        const buttonItem = createDiv("icon", "icon_delete", "tag_mailing_item");
+        buttonItem.addEventListener('click', () => {
+            if (confirm(`Delete '${mailing.name}' mailing?`))
+                deleteMailing(mailing);
+        });
 
-        const icon2 = document.createElement('div');
-        icon2.classList.add('box__icon');
-        icon2.classList.add('icon_delete');
-        icon2.addEventListener('click', ()=>{deleteMailing(mailing)});
-
-        item.append(name, checkbox, icon1, icon2);
+        tag.append(nameItem);
+        tag.append(inputItem);
+        tag.append(buttonItem);
+        item.append(tag);
         fragment.appendChild(item);
     });
 
@@ -137,88 +287,77 @@ function updateSelector(response) {
     selector.scrollTop = selector.scrollHeight;
 }
 
-
+// update selector function
 function updateMessager(response) {
-    if (!response.current_mailing) {
+    if (!('current_mailing' in response && 'messages' in response &&
+    'exeError' in response)) {
         console.log("Error: wrong response format");
+        console.log(response);
+
         return;
     }
 
+    if (response.exeError === 'existing name')
+        alert("Name is already existed");
+
+
+    currentMailingName.innerText = response.current_mailing.name;
+    selectedMailing = response.current_mailing;
     messager.innerHTML = '';
-
-    if (Object.keys(response.current_mailing).length === 0) {
-        textCurrentMailing.innerHTML = 'Select mailing';
-        return;
-    }
-
-    textCurrentMailing.innerHTML = response.current_mailing.name;
 
     const fragment = document.createDocumentFragment();
     const messages = response.messages;
     messages.forEach(msg => {
-        const item = document.createElement('textarea');
-        item.value = msg.text;
+        const item = createDiv('roller__item');
+        const tagItem = createDiv('tag_mailing', 'tag_mailingmsg');
+        const nameItem = createDiv('clickable_text', 'tag_mailingmsg_item');
+        nameItem.innerText = msg.name;
 
-        setTimeout(function() {
-            item.style.height = 'auto';
-            item.style.height = item.scrollHeight;
-          }, 0.5);
-
-        item.style.height = 'auto';
-        item.style.height = item.scrollHeight;
-
-        item.classList.add('messager__message', 'messager__message_delayed');
-        if (msg.is_active)
-            item.style['border-color'] = '#0087DD';
-        else
-            item.style['border-color'] = 'rgb(94, 205, 50)'
-
-        const item2 = document.createElement('div');
-        item2.classList.add('messager__setting');
-        const inputTime = document.createElement('input');
-        inputTime.type ='datetime-local';
-        const inputActivity = document.createElement('input');
-        inputActivity.type ='checkbox';
-        inputActivity.classList.add('checkbox');
-        inputActivity.checked = msg.is_active;
-
-        const plusButton = document.createElement('div');
-        plusButton.classList.add('box__icon', 'icon_plus');
-        const deleteButton = document.createElement('div');
-        deleteButton.classList.add('box__icon', 'icon_delete');
-        
-        item2.append(inputTime, inputActivity, plusButton, deleteButton);
-
-        fragment.appendChild(item);
-        fragment.appendChild(item2);
-
-        item.addEventListener('keydown', resize);
-        item.addEventListener('keydown', ()=>{
-            inputActivity.disabled = true;
-
-            msg.is_active = false;
-            inputActivity.checked = false;
-            item.style['border-color'] = 'red';
+        nameItem.addEventListener('click', () => {
+            selectedMessage = msg;
+            openEditor();
         });
-        inputActivity.addEventListener('click', ()=>{
-            msg.is_active = inputActivity.checked;
+
+        const inputItem = document.createElement('input');
+        inputItem.classList.add('checkbox', "tag_mailingmsg_item");
+        inputItem.type = 'checkbox';
+        inputItem.checked = msg.is_active;
+        inputItem.addEventListener("change", () => {
+            msg.is_active = inputItem.checked;
             updateMessage(msg);
+        });
+
+        const button1Item = createDiv("icon", "icon_plus", 'tag_mailingmsg_item');
+        button1Item.addEventListener('click', () => {
+            sendMessage(msg);
+        });
+
+        const button2Item = createDiv("icon", "icon_delete", 'tag_mailingmsg_item');
+        button2Item.addEventListener('click', () => {
+            deleteMessage(msg);
         })
-        plusButton.addEventListener('click', ()=>{
-            msg.text = item.value;
-            console.log(item.value);
-            updateMessage(msg);
-        })
+
+        tagItem.append(nameItem);
+        tagItem.append(inputItem);
+        tagItem.append(button1Item);
+        tagItem.append(button2Item);
+        item.append(tagItem);
+        fragment.appendChild(item);
     });
+
     messager.appendChild(fragment);
+
 
 }
 
 
+function initMessager() {
+    messager.innerHTML = '';
+    currentMailingName.innerText = 'Not chosen';
+}
 
 
 /* Global update */
-
 document.addEventListener('DOMContentLoaded', () => {
     const body = {
         type: 'update',
@@ -228,5 +367,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSelector(response);
     });
 
-    checkForSend();
+    initMessager();
+
+    selectedMessage = null;
+    selectedMailing = null;
+
+    //checkForSend();
 });

@@ -3,17 +3,57 @@ import vk
 import random
 import bot_settings
 from database import database
-from datetime import datetime 
+from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 class response_handler:
     def __init__(self, db):
         self.session = vk.Session()
         self.api = vk.API(self.session, v='5.50')
         self.db = db
+        self.mailing_scheduler = BackgroundScheduler()
+        self.setup_mailing_scheduler()
+        self.mailing_scheduler.start()
 
+
+    # setup mailing scheduler
+    def setup_mailing_scheduler(self):
+        self.mailing_scheduler.remove_all_jobs()
+        messages = self.db.get_all('mailing_messages')
+
+        cur_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        for msg in messages:
+            if msg['time'] != None and msg['time'] != '0000-00-00 00:00:00' and msg['time'] > datetime.now():
+                self.mailing_scheduler.add_job(self.send_mailing_message, 'date', run_date=msg['time'], args=[msg])
+        return
+
+    # send mailing message
+    def send_mailing_message(self, msg):
+
+        if not self.db.is_one('mailings', {'id': msg['mailing_id']}):
+            return
+
+        mailing = self.db.get_one('mailings', {'id': msg['mailing_id']})
+
+        if not mailing['is_active']:
+            return
+
+        links = self.db.get_all('mailing_and_user', {'mailing_id': msg['mailing_id']})
+
+        for link in links:
+            if not self.db.is_one('users', {'id': link['user_id']}):
+                continue
+
+            user = self.db.get_one('users', {'id': link['user_id']})
+
+            self.send_message(user['id'], msg['text'])
+        return
+
+    # send message to user
     def send_message(self, user_id, text):
         debug_user = self.db.get_one('debug_users', {'user_id': user_id})
-        if debug_user != None:
+        if debug_user != None: # check is debug user
             now = datetime.now()
             formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -25,6 +65,7 @@ class response_handler:
                 random_id=random.getrandbits(64))
         return
 
+    # run session process
     def run_session(self, data):
         if 'body' not in data.keys() or 'user_id' not in data.keys():
             return
@@ -32,8 +73,10 @@ class response_handler:
         if self.db.get_one('users', {'id': data['user_id']}) == None:
             return
 
+        # get user
         user = self.db.get_one('users', {'id': data['user_id']})
 
+        # run current session
         if user['session'] == 'start':
             self.session_start(user['phase'], data)
         elif user['session'] == 'info':
@@ -48,14 +91,17 @@ class response_handler:
             self.session_default(user['phase'], data)
         return
 
+    # update session in database
     def update_session(self, user_id, session, phase):
         self.db.update_all('users', {'session': session, 'phase': phase}, {'id': user_id})
         return
 
+    # clear tmp list for user
     def list_erase(self, user_id):
         self.db.delete_all('list', {'user_id': user_id})
         return
 
+    # add value to tmp list
     def list_push_back(self, user_id, type, value):
         element = {'user_id' : user_id, 'type': type, 'num': 0, 'text': ''}
         if type == 'text':
@@ -65,9 +111,10 @@ class response_handler:
         self.db.add_one('list', element)
         return
 
+    # get values from tmp list
     def list_get(self, user_id):
         elements = self.db.get_all('list', {'user_id': user_id})
-        
+
         res = []
         for value in elements:
             if value['type'] == 'text':
@@ -76,10 +123,7 @@ class response_handler:
                 res.append(value['num'])
         return res
 
-    def list_erase(self, user_id):
-        self.db.delete_all('list', {'user_id': user_id})
-        return
-
+    # default session
     def session_default(self, phase, data):
         if phase == 0:
 
@@ -99,7 +143,7 @@ class response_handler:
                 self.run_session(data)
                 return
             # session with mailing
-            if data['body'] in ['/mailing']:
+            if data['body'] in ['/mailing', '/mail']:
                 self.update_session(data['user_id'], 'mailing', 0)
                 self.run_session(data)
                 return
@@ -115,6 +159,7 @@ class response_handler:
         return
     # end of 'session_default' function
 
+    # start session
     def session_start(self, phase, data):
         if phase == 0:
             message = \
@@ -132,6 +177,7 @@ class response_handler:
         return
     # end of 'session_start' function
 
+    # info session
     def session_info(self, phase, data):
         if phase == 0:
 
@@ -152,6 +198,7 @@ class response_handler:
         return
     # end of 'session_info' function
 
+    # bonus session
     def session_bonus(self, phase, data):
         # information
         if phase == 0:
@@ -172,6 +219,7 @@ class response_handler:
         return
     # end of 'session_bonus' function
 
+    # mailing session
     def session_mailing(self, phase, data):
         # information
         if phase == 0:
@@ -191,24 +239,28 @@ class response_handler:
                 if ml not in user_mailings:
                     available.append(ml)
 
-            message = "Доступные рассылки:\n"
+            message = '''--------------------------------------------------
+Доступные рассылки:
+--------------------------------------------------\n\n'''
+
             if len(available):
                 for ml in available:
                     message += str(ml['num']) + ') ' + ml['name'] + '\n'
             else:
                 message += "Нет доступных рассылок ¯\_(ツ)_/¯\n"
 
-            message += "Ваши подписки:\n"
-
+            message += '''\n--------------------------------------------------
+Ваши подписки:
+--------------------------------------------------\n\n'''
             if len(user_mailings):
                 for ml in user_mailings:
                     message += str(ml['num']) + ') ' + ml['name'] + '\n'
             else:
                 message += "У вас нет подписок ¯\_(ツ)_/¯\n"
 
-            message += \
-'''
-'/sub (номер рассылки)': подписаться на рассылку
+            self.send_message(data['user_id'], message)
+            message = \
+''''/sub (номер рассылки)': подписаться на рассылку
 '/unsub (номер рассылки)': отписаться от рассылки
 '/quit': выйти из раздела 'рассылки'
 '''

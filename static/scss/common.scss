@@ -26,6 +26,8 @@ $size_logo: 70px;
 $size_account: 80px;
 $size_search_bar: 70px;
 $messagecurve: 20px;
+$box_radius: 20px;
+$tag_radius: 8px;
 
 $bluecolor: #0087DD;
 $lightbluecolor: #7eceff; 
@@ -39,6 +41,40 @@ $icon_account: url("/static/images/account.jpg");
 $icon_plane_button: url("/static/images/message_plane.png");
 $icon_plus_button: url("/static/images/plus_button.png");
 $icon_delete_button: url("/static/images/delete_button.png");
+
+
+.clickable_text {
+    color: white;
+    &:hover {
+        color: $lightgreycolor;
+    }
+}
+
+.small_text {
+    @include text(15px, white);
+}
+
+
+.input_text {
+    background: none;
+    //size: 120;
+    @include text(15px, white);
+    //@extend %tmpldebug;
+    &::placeholder {
+        @include text(15px, $lightgreycolor)
+    }
+}
+
+/*.input_textarea {
+    resize: none;
+    background: none;
+}*/
+
+.input_time {
+    background: none;
+    @include text(15px, white)
+}
+
 
 .header {
     display: flex;
@@ -155,42 +191,26 @@ $icon_delete_button: url("/static/images/delete_button.png");
     min-height: 500px;
 
     display: flex;
+    align-items: center;
     justify-content: space-around;
 
     &__item {
-        background-color: $darkgreycolor;
-        border-radius: 30px;
         height: 90%;
-        margin: auto;
     }
 
-    &__item_chat:nth-child(1) {
-        flex-basis: 30%;
-    }
-    &__item_chat:nth-child(2) {
-        flex-basis: 40%;
-    }
-
-    &__item_statistics:nth-child(1) {
-        flex-basis: 40%;
-    }
-
-    &__item_mailing:nth-child(1) {
-        flex-basis: 20%;
-    }
-
-    &__item_mailing:nth-child(2) {
-        flex-basis: 40%;
-    }
 }
 
 .box {
     //@extend %tmpldebug;
-    display:flex;
+    display: flex;
     height: 100%;
 
     flex-direction: column;
     overflow: hidden;
+
+    background-color: $darkgreycolor;
+    border-radius: $box_radius;
+    box-shadow: 5px 5px 5px;
 
     &__header {
         display: flex;
@@ -201,14 +221,13 @@ $icon_delete_button: url("/static/images/delete_button.png");
         //@extend %tmpldebug;
         
         background-color: $greycolor;
-        border-radius: 30px 30px 0 0;
+        border-radius: $box_radius $box_radius 0 0;
     }
 
-    &__roll {
-        flex-grow:1;
+    &__content {
         min-height: 200px;
+        flex-grow: 1;
         overflow-y: scroll;
-        overflow-x: hidden;
         //@extend %tmpldebug;
     }
 
@@ -221,199 +240,73 @@ $icon_delete_button: url("/static/images/delete_button.png");
         //@extend %tmpldebug;
 
         background-color: $greycolor;
-        border-radius:  0 0 30px 30px;
+        border-radius:  0 0 $box_radius $box_radius;
 
-        &_mailing {
-            @include text(20px, white);
-            align-items: center;
-            //@extend %tmpldebug;
 
-            &:hover {
-                @include text(20px, $greencolor);
-            }
+
+    }
+}
+
+// Icons
+.icon {
+    align-self: center;
+
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+    //@extend %tmpldebug;
+
+    // send button icon
+    &_plane {
+        background-image: $icon_plane_button;
+    
+        &:hover {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plane_button;
         }
-
     }
 
-    &__input {
-        background: none;
-        resize: none;
-        
-        height: 80%;
-        width: 75%;
-        margin: 0px;
-        padding-right: 20px;
-        @include text(20px, white);
-        //@extend %tmpldebug;
+    // add button icon
+    &_plus {
+        background-image: $icon_plus_button;
+    
+        &:hover {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plus_button;
+        }
     }
 
-    &__icon {
-        align-self: center;
-
-        background-size: contain;
-        background-position: center;
-        background-repeat: no-repeat;
-        width: 40px;
-        height: 60%;
-        //@extend %tmpldebug;
-    }
-
-}
-
-.icon_plane {
-    background-image: $icon_plane_button;
-
-    &:hover {
-        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plane_button;
+    // delete button icon
+    &_delete {
+        background-image: $icon_delete_button;
+    
+        &:hover {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_delete_button;
+        }
     }
 }
 
-.icon_plus {
-    background-image: $icon_plus_button;
 
-    &:hover {
-        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_plus_button;
-    }
-}
-
-.icon_delete {
-    background-image: $icon_delete_button;
-
-    &:hover {
-        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%), $icon_delete_button;
-    }
-}
-
+// checkbox button
 .checkbox {
-    margin-left: 15px;
-    margin-right: 15px;
+    @extend %tmpldebug;
     border-radius: 100%;
     width: 20px;
-    height: 20px;
-    //@extend %tmpldebug;
+    height: 15px;
 }
 
 
 
-.messager {
-    &__message {
-        font-size: 20;
-        padding-top: 15px;
-        padding-bottom: 15px;
-        padding-right: 12px;
-        padding-left: 12px;
-        white-space: pre-wrap;
-        clear: both;
-        background-color: $greycolor;
-        margin-top: 3px;
-        margin-bottom: 3px;
-        display: inline-block;
-        resize: none;
-        overflow: hidden;
-        width: 300px;
 
-        @include text(20px, white);
-        border-radius: $messagecurve;
-        
-        &_left {
-            float: left;
-            margin-left: 10px;
-        }
-
-        &_right {
-
-            float: right;
-            margin-right: 10px;
-        }
-
-        &_delayed {
-            float: left;
-            margin-left: 10px;
-            border-style: solid;
-            border-width: 2px;
-            border-color: $greencolor;
-        }
- 
+@keyframes anim_popup {
+    from {
+      transform: scale(1);
     }
-
-    &__setting {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-
-        clear: both;
-
-        height: 50px;
-
-        background-color: $greycolor;
-        margin-top: 5px;
-        margin-bottom: 20px;
-    
-        //@extend %tmpldebug;
-    
-        @include text(20px, white);
-    
+  
+    to {
+      transform: scale(2);
     }
-
-
-    &__time {
-        font-size: 20;
-        padding-right: 12px;
-        padding-left: 12px;
-        display: inline-block;
-        white-space: pre-wrap;
-        clear: both;
-        margin-top: 1px;
-        margin-bottom: 10px;
-        border-radius: $messagecurve;
-
-        @include text(10px, $lightgreycolor);
-
-        &_left {
-            float: left;
-            margin-left: 10px;
-        }
-        
-        &_right {
-            float: right;
-            margin-right: 10px;
-        }
-    }
-    
-}
-
-
-.user {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-
-    height: 50px;
-
-    background-color: $greycolor;
-    margin-top: 5px;
-
-    margin-left: 3px;
-    margin-right: 3px;
-
-
-
-    //@extend %tmpldebug;
-
-    @include text(20px, white);
-
-    border-radius: $messagecurve;
-
-    &__name {
-        flex-basis: 50%;
-        flex-grow: 1;
-        margin-left: 15px;
-        margin-right: 15px;
-        color: $greencolor;
-        //@extend %tmpldebug;
-    }
-}
-
+  }
 
 .boxheader {
     display:inline-flex;
@@ -421,12 +314,18 @@ $icon_delete_button: url("/static/images/delete_button.png");
     justify-content: center;
     align-items: center;
 
-    border: 3px solid $bluecolor;
-    border-radius: 50px;
+    border-style: solid;
+    border-color: $bluecolor;
+    border-width: 0px 3px 0px 3px;
+    border-radius: 5%;
+    box-shadow: 2px 2px 5px black;
+    //border-radius: 50px;
     min-width: 150px;
 
     margin-left: 10px;
     margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding-left: 20px;
     padding-right: 20px;
 
@@ -441,46 +340,101 @@ $icon_delete_button: url("/static/images/delete_button.png");
         @include text(20px, white);
     }
 
-    &__input {
-        background: none;
-        size: 10;
-        @include text(15px, white);
-        //@extend %tmpldebug;
-    }
+    transition: all 0.1s ease-out;
 
-    &__input::placeholder {
-        @include text(15px, $lightgreycolor)
+    &:hover {
+        transform: scale(1.01);
+        box-shadow: 4px 4px 5px black;
     }
 }
 
-.mailing {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-left: 3px;
-    margin-right: 3px;
-
-    height: 50px;
-
-    background-color: $greycolor;
-    margin-top: 5px;
-
-
+.roller {
     //@extend %tmpldebug;
 
-    @include text(20px, white);
+    &__item {
+        display: flex;
+        margin-top: 3px;
+        //@extend %tmpldebug;
 
-    border-radius: $messagecurve;
+        &_left {
+            justify-content: flex-start;
+            margin-left: 5px;
+        }
 
-    &__name {
-        flex-basis: 50%;
-        flex-grow: 1;
-        margin-left: 15px;
-        margin-right: 15px;
-        color:$greencolor;
+        &_right {
+            justify-content: flex-end;
+            margin-right: 5px;
+        }
+    }
+}
+
+.popup{
+    width:100%;
+    min-height:100%;
+    background-color: rgba(141, 141, 141, 0.3);
+    overflow:hidden;
+    position:fixed;
+    top:0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @extend %tmpldebug;
+
+    opacity: 1;
+
+    top: 0px;
+
+    transition: opacity 0.3s ease-out;
+
+    &_close {
+        transition-property: opacity, top;
+        transition-timing-function: ease-out;
+        transition-duration:  0.3s, 0s;
+        transition-delay: 0s, 0.3s;
+        opacity: 0;
+        top: 2000px;
+    }
+}
+
+.popup_window {
+    //border: 1px solid white;
+    width: 40%;
+    height: 600px;
+    box-shadow: 7px 7px 5px black;
+    background-color: $darkgreycolor;
+
+    &_header {
+        display: flex;
+        //height:25px;
+        width:100%;
+        border: dashed  $lightgreycolor;
+        border-width: 0px 0px 1px 0px;
+
+        &_item:nth-child(1) {
+            padding: 10px;
+            flex-grow: 1;
+            @include text(15px, $lightgreycolor)
+
+        }
+
+        &_item:nth-child(2) {
+            height: 23px;
+            flex-basis: 10%;
+        }
+
+        &_item:nth-child(3) {
+            height: 23px;
+            flex-basis: 10%;
+            //@extend %tmpldebug;
+        }
+
+
         //@extend %tmpldebug;
     }
 
+    &_content {
+        padding: 20px;
+    }
 }
 
 

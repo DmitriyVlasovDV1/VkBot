@@ -1,0 +1,339 @@
+@import "null_style.scss";
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
+%tmpldebug {
+    background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
+}
+
+
+// sizes
+$header_height: 70px;
+$size_account: 50px;
+$size_nt_icons: 25px;
+$size_side_icons: 170px;
+
+// colors
+$color_black: #000000;
+$color_blue: #0087DD;
+$color_white: white;
+
+
+// pics
+$icon_account: url("/static/images/account2.jpg");
+$icon_logo: url("/static/images/logo.png");
+$icon_vk: url("/static/images/icon_vk.png");
+$icon_tg: url("/static/images/icon_tg.png");
+$icon_steam: url("/static/images/icon_steam.jpg");
+$icon_inst: url("/static/images/icon_inst.png");
+$img_background: url("/static/images/background.png");
+
+@mixin text($size, $color) {
+    color:$color;
+    font-size: $size;
+    font-family: 'Comfortaa', cursive;
+}
+
+.main_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    height: $header_height;
+    width: 100%;
+    height: 70px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    background-color: $color_black;
+    border-width: 0px 0px 1px 0px;
+    border-color: $color_white;
+    border-style: solid;
+
+    &__item {
+
+        &:nth-child(1) {
+            flex-basis: 15%;
+            display: flex;
+            justify-content: center;
+            //@extend %tmpldebug;
+        }
+
+        &:nth-child(2) {
+            flex-basis: 70%;
+            //@extend %tmpldebug;
+        }
+
+        &:nth-child(3) {
+            flex-basis: 15%;
+            display: flex;
+            justify-content: center;
+            //@extend %tmpldebug;
+        }
+    }
+
+    &__account {
+
+        &.outer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: $size_account;
+            width: $size_account;
+
+            border-radius: 100%;
+            border-width: 2px;
+            border-color: $color_white;
+            border-style: solid;
+        }
+
+
+        transition: all 0.2s ease-out;
+
+
+        &.inner {
+            height: $size_account * 0.8;
+            width: $size_account * 0.8;
+
+            background-image: $icon_account;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            border-radius: 100%;
+            border-width: 2px;
+            border-style: solid;
+            border-color: $color_white;
+
+            &:hover {
+                transition: all 0.2s ease-out;
+                transform: scale(1.25);
+            }
+        }
+
+    }
+    //@extend %tmpldebug;
+
+}
+
+.progress_bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    &__item {
+        @include text(20px, white);
+    }
+
+    //@extend %tmpldebug;
+
+}
+
+.switcher {
+    display: flex;
+    justify-content: space-between;
+    width: 60%;
+    padding: 5px;
+
+    border-radius: 20px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: $color_white;
+
+
+    &__item {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        border-radius: 100%;
+
+        height: $size_nt_icons;
+        width: $size_nt_icons;
+
+
+        &:nth-child(1) {
+            background-image: $icon_vk;
+        }
+
+        &:nth-child(2) {
+            background-image: $icon_tg;
+        }
+
+        &:nth-child(3) {
+            background-image: $icon_steam;
+        }
+
+        &:nth-child(4) {
+            background-image: $icon_inst;
+        }
+
+
+        &:hover {
+            border: 2px solid $color_white;
+        }
+
+
+    }
+
+    //@extend %tmpldebug;
+}
+
+
+
+.content {
+    //justify-content: center;
+    //align-items: center;
+    height: 100%;
+    //overflow: hidden;
+
+    background-color: $color_black;
+
+}
+
+.slider {
+    cursor: move;
+
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    height:100%;
+    width: 100%;
+
+    background: linear-gradient(#e66465, #9198e5);;
+    //transform: rotate(45deg);
+    @extend %tmpldebug;
+
+    &__slide {
+        position: absolute;
+        margin:auto;
+        height: 100%;
+        width: 80%;
+
+
+        //transition: transform ease;
+
+        background-color: $color_black;
+        @extend %tmpldebug;
+
+        &.active {
+            background-color: $color_black;
+        }
+
+        &.animate {
+            transition: transform 0.5s ease;
+        }
+    }
+
+}
+
+
+.cover {
+    position: fixed;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    height: 100%;
+    width: 100%;
+
+    &__item {
+        height: 100%;
+        width: 50%;
+
+        //@extend %tmpldebug;
+
+        &.right {
+            display: flex;
+            flex-direction: column;
+        }
+
+        &.left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+    }
+
+    &__icon {
+        position: fixed;
+        top: 300px;
+        padding: 15px;
+
+        &.left {
+            transform: rotate(12deg) translate(-28px, 0px);
+        }
+
+        &.right {
+            transform: rotate(-12deg) translate(28px, 0px);
+            right: 0px;
+        }
+
+
+        height: $size_side_icons;
+        width: $size_side_icons;
+        background-color: white;
+
+        & > div {
+            background-image: $icon_logo;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+
+            height: 100%;
+            width: 100%;
+        }
+
+        transition: all 0.1s ease-out;
+        &:hover {
+            transition: all 0.1s cubic-bezier(0,.86,1,1.9);
+
+            &.left {
+                transform: rotate(15deg) translate(-20px, 0px);
+            }
+            &.right {
+                transform: rotate(-15deg) translate(20px, 0px);
+            }
+
+        }
+    }
+
+
+    &__strip {
+        width: 400px;
+        //@extend %tmpldebug;
+    }
+
+
+    //@extend %tmpldebug;
+}
+
+.tmp {
+    position: absolute;
+    top: 300px;
+    left: -25px;
+    transform: rotate(12deg);
+    padding: 15px;
+
+    //@extend %tmpldebug;
+    background-color: white;
+}
+
+.icon {
+    background-image: $icon_inst;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+
+
+    height: 180px;
+    width: 180px;
+
+    //@extend %tmpldebug;
+}

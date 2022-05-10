@@ -1,0 +1,203 @@
+@import "common.scss";
+
+.content {
+    &__item_mailing:nth-child(1) {
+        flex-basis: 20%;
+    }
+
+    &__item_mailing:nth-child(2) {
+        flex-basis: 40%;
+    }
+}
+
+
+.box__bottom {
+    &_mailing {
+        @include text(20px, white);
+
+        align-items: center;
+        //@extend %tmpldebug;
+
+    }
+}
+
+
+
+.tag {
+
+    &_mailing {
+        width: 100%;
+        height: 50px;
+
+        background-color: $greycolor;
+        border-radius: $tag_radius;
+        //@extend %tmpldebug;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 3px;
+        margin-right: 3px;
+        @include text(20px, white);
+
+        &_item:nth-child(1) {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        &_item:nth-child(2) {
+            flex-basis: 15%;
+        }
+
+        &_item:nth-child(3) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+        &_item:nth-child(4) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+    }
+
+    &_mailingmsg {
+        width: 100%;
+        height: 50px;
+
+        background-color: $greycolor;
+        border-radius: $tag_radius;
+        //@extend %tmpldebug;
+
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 3px;
+        margin-right: 3px;
+        @include text(20px, white);
+
+        &_item:nth-child(1) {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        &_item:nth-child(2) {
+            flex-basis: 15%;
+        }
+
+        &_item:nth-child(3) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+        &_item:nth-child(4) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+    }
+
+
+}
+
+.input_textarea {
+    &_mailing {
+        resize: none;
+        background: none;
+        margin: 15px;
+        padding: 5px;
+        height: 300px;
+        width: 95%;
+        border: 1px solid $lightgreycolor;
+        @include text(15px, white);
+    }
+}
+
+
+.messager {
+    &__message {
+        //@extend %tmpldebug;
+        font-size: 20;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        padding-right: 12px;
+        padding-left: 12px;
+        white-space: pre-wrap;
+        clear: both;
+        background-color: $greycolor;
+        margin-top: 3px;
+        margin-bottom: 3px;
+        display: inline-block;
+        resize: none;
+        overflow: hidden;
+        width: 300px;
+
+        @include text(20px, white);
+        border-radius: $messagecurve;
+        
+        &_left {
+            float: left;
+            margin-left: 10px;
+        }
+
+        &_right {
+
+            float: right;
+            margin-right: 10px;
+        }
+
+        &_delayed {
+            float: left;
+            margin-left: 10px;
+            border-style: solid;
+            border-width: 2px;
+            border-color: $greencolor;
+        }
+ 
+    }
+
+    &__setting {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+
+        clear: both;
+
+        height: 50px;
+
+        background-color: $greycolor;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    
+        //@extend %tmpldebug;
+    
+        @include text(20px, white);
+    
+    }
+
+
+    &__time {
+        font-size: 20;
+        padding-right: 12px;
+        padding-left: 12px;
+        display: inline-block;
+        white-space: pre-wrap;
+        clear: both;
+        margin-top: 1px;
+        margin-bottom: 10px;
+        border-radius: $messagecurve;
+
+        @include text(10px, $lightgreycolor);
+
+        &_left {
+            float: left;
+            margin-left: 10px;
+        }
+        
+        &_right {
+            float: right;
+            margin-right: 10px;
+        }
+    }
+    
+}

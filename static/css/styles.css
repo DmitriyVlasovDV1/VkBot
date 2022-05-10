@@ -75,11 +75,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*--------------------*/
-.user__name, .checkbox, .box__icon, .box__bottom_mailing, .header {
-  background-color: rgba(255, 3, 3, 0.26);
-  border: 2px solid #48d848;
-}
-
 body {
   background-image: url("/static/images/background.png");
   background-size: cover;

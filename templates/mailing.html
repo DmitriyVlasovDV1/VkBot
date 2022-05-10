@@ -1,7 +1,8 @@
 
 <html>
     <head>
-        <link type="text/css" href="/static/css/styles.css" rel="stylesheet"/>
+        <link type="text/css" href="/static/css/common.css" rel="stylesheet"/>
+        <link type="text/css" href="/static/css/mailing.css" rel="stylesheet"/>
         <meta charset="UTF-8">
         <title>No title</title>
     </head>
@@ -26,21 +27,26 @@
                 </div>
             </div>
         </div>
+        <!-- content -->
         <div class="content">
             <div class="content__item content__item_mailing">
                 <div class="box">
                     <div class="box__header">
                         <div class="boxheader">
-                            <input required class="boxheader__input" id="input_mailing_name" type="text" placeholder="Type new mailing's name ">
-                            <div class="box__icon icon_plus" id="button_add_mailing"></div>
+                            <input required class="input_text" id="input_mailing_name" type="text" placeholder="Type new mailing's name ">
                         </div>
                     </div>
-                    <div class="box__roll" id="selector">
-                        <div class="mailing">
-                            <div class="mailing__name">Tirex daily paper</div>
-                            <input class="checkbox" type="checkbox" id="button_mute_mailing">
-                            <div class="box__icon icon_plus" id="button_select_mailing"></div>
-                            <div class="box__icon icon_delete" id="button_delete_mailing"></div>
+                    <div class="box__content">
+                        <div class="roller"  id="selector">
+                            <!--
+                            <div class="roller__item">
+                                <div class="tag_mailing">
+                                    <div class="mailing__name" >Tirex daily paper</div>
+                                    <input class="checkbox" type="checkbox" id="button_mute_mailing">
+                                    <div class="icon icon_plus" id="button_select_mailing"></div>
+                                    <div class="icon icon_delete" id="button_delete_mailing"></div>
+                                </div>
+                            </div>-->
                         </div>
                     </div>
                     <div class="box__bottom"></div>
@@ -51,29 +57,50 @@
                 <div class="box">
                     <div class="box__header">
                         <div class="boxheader">
-                            <div class="boxheader__mailingname" id="text_current_mailing">Tirex daily paper</div>
+                            <div class="boxheader__mailingname" id="current_mailing_name">Not chosen</div>
                         </div>
                     </div>
-                    <div class="box__roll messager" id="messager">
-                        <textarea class="messager__message messager__message_delayed" id="input_delmsg">Hello</textarea>
-                         <div class="messager__setting">
-                             <input type="datetime-local">
-                             <input class="checkbox" type="checkbox" id="button_mute_mailing">
-                            <div class="box__icon icon_plus" id="button_select_delmsg"></div>
-                            <div class="box__icon icon_delete" id="button_delete_delmsg"></div>
-                        </div>
 
-                        <textarea class="messager__message messager__message_delayed" id="input_delmsg">Hello</textarea>
-                         <div class="messager__setting">
-                             <input type="datetime-local">
-                             <input class="checkbox" type="checkbox" id="button_mute_mailing">
-                            <div class="box__icon icon_plus" id="button_select_delmsg"></div>
-                            <div class="box__icon icon_delete" id="button_delete_delmsg"></div>
+                    <div class="box__content">
+                        <div class="roller" id = "messager">
+                            <!--
+                            <div class="roller__item">
+                                <div class="tag_mailingmsg">
+                                    <div class="clickable_text tag_mailingmsg_item">Name of mailing message</div>
+                                    <input class="checkbox tag_mailingmsg_item" type="checkbox">
+                                    <div class="icon icon_plus tag_mailingmsg_item"></div>
+                                    <div class="icon icon_delete tag_mailingmsg_item"></div>
+                                </div>
+                            </div>-->
                         </div>
-
                     </div>
-                    <div class="box__bottom box__bottom_mailing" id='add_message_button'>New message</div>
+
+                    <div class="box__bottom box__bottom_mailing clickable_text" id='add_message_button'>New message</div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- edit message popup window -->
+    <div class="popup popup_close" id="editor_window">
+        <div class="popup_window">
+            <div class="popup_window_header">
+                <div class="popup_window_header_item">Editing mailing message</div>
+                <div class="popup_window_header_item icon icon_plus" id="button_editor_save"></div>
+                <div class="popup_window_header_item icon icon_delete" id="button_editor_close"></div>
+            </div>
+            <div class="popup_window_content">
+                <span class="small_text">Name: </span><input required class="input_text" size="60" type="text" placeholder="Type new mailing's message name " id="editor_message_name">
+                <br><br>
+                <div class="small_text">Content:</div>
+                <div ><textarea class="input_textarea_mailing"  id="editor_message_text"></textarea><div>
+                <br><br>
+                <div class="small_text">Sending time:</div>
+                <br>
+                <input type="datetime-local" class="input_time" id="editor_message_time">
+                <br><br>
+                <span class="small_text"  id="editor_message_flag">Is active:</span> <input class="checkbox" type="checkbox">
             </div>
         </div>
     </div>
