@@ -1,12 +1,25 @@
-const buttonMessage = document.getElementById('button_message');
-const butttonAddUser = document.getElementById('button_add_user')
-const butttonDeleteUser = document.getElementById('button_delete_user')
+//const buttonMessage = document.getElementById('button_message');
+//const butttonAddUser = document.getElementById('button_add_user')
+//const butttonDeleteUser = document.getElementById('button_delete_user')
 const inputUserName = document.getElementById('input_user_name')
 const inputMessage = document.getElementById('textarea_message');
-const selector = document.getElementById('selector');
-const messager = document.getElementById('messager');
+const selector = document.getElementById('chat_selector');
+const messager = document.getElementById('chat_messager');
 const textCurrentUser = document.getElementById('text_current_user');
 
+// create html block function
+function createDiv()
+{
+    const res = document.createElement('div');
+
+    for (var i = 0; i < arguments.length; i++) {
+        res.classList.add(arguments[i]);
+    }
+
+    return res;
+}
+
+// creation post request
 function createPost(body, cb={}) {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://127.0.0.1:5000/');
@@ -23,20 +36,29 @@ function createPost(body, cb={}) {
     xhr.send(JSON.stringify(body));
 }
 
+// user name input reponse
+inputUserName.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        if (inputUserName.value.trim() === '') {
+            alert( "Название должно вдохновлять" );
+            return;
+        }
+
+        addUser(inputUserName.value);
+
+        inputUserName.value = '';
+    }
+});
 
 
-/* Selector */
-butttonAddUser.addEventListener('click', () => {
-    if (inputUserName.value === '')
-        return;
-
+function addUser(name) {
     const body = {
         type: 'add_user',
-        user_name: inputUserName.value
-    };
-    inputUserName.value = '';
+        user_name: name
+    }
+
     createPost(body, updateSelector);
-});
+}
 
 function deleteUser(name) {
     const body = {
@@ -66,31 +88,33 @@ function updateSelector(response) {
     const fragment = document.createDocumentFragment();
     const debug_users = response.debug_users;
     debug_users.forEach(user => {
-        const item = document.createElement('div');
-        item.classList.add('user');
+        const item = createDiv('roller__item');
+        const tag = createDiv('tag', 'bot_name');
+        
+        const nameItem = createDiv("item");
+        nameItem.innerText = user.name;
 
-        const name = document.createElement('div');
-        name.classList.add('user__name');
-        name.innerHTML = user.name;
+        const buttonSelect = createDiv("button", "arrows", "item");
+        buttonSelect.addEventListener('click', () => {
+            selectUser(user.name);
+        });
 
-        const icon1 = document.createElement('div');
-        icon1.classList.add('box__icon');
-        icon1.classList.add('icon_plus');
-        icon1.addEventListener('click', ()=>{selectUser(user.name)});
+        const buttonDelete = createDiv("button", "cross", "item");
+        buttonDelete.addEventListener('click', () => {
+            deleteUser(user.name);
+        });
 
-        const icon2 = document.createElement('div');
-        icon2.classList.add('box__icon');
-        icon2.classList.add('icon_delete');
-        icon2.addEventListener('click', ()=>{deleteUser(user.name)});
 
-        item.append(name, icon1, icon2);
+        tag.append(nameItem);
+        tag.append(buttonSelect);
+        tag.append(buttonDelete);
+        item.append(tag);
         fragment.appendChild(item);
     });
 
     selector.appendChild(fragment);
 
     selector.scrollTop = selector.scrollHeight;
-
 }
 
 /* Chat */
@@ -105,10 +129,6 @@ function sendMessage() {
 
     createPost(body, updateMessager);
 }
-
-buttonMessage.addEventListener('click', () => {
-    sendMessage();
-});
 
 
 function checkForSend() {
@@ -126,7 +146,7 @@ function checkForSend() {
     });
 }
 
-
+// update messager
 function updateMessager(response) {
     if (!response.current_user && response.current_user !== '') {
         console.log("Error: wrong response format");
@@ -145,26 +165,21 @@ function updateMessager(response) {
     const fragment = document.createDocumentFragment();
     const messages = response.messages;
     messages.forEach(msg => {
-        const item = document.createElement('div');
-        const time = document.createElement('div');
-        const date = String(msg.date);
-        parsedDate = date.split(" ");
-        item.innerText = msg.text;
-        time.innerText = parsedDate[4] + " " + parsedDate[1] + " " + parsedDate[2];
-        console.log(date.split(" "));
-        console.log(typeof date);
-        item.classList.add('messager__message');
-        time.classList.add('messager__time');
-        if (msg.type == 'bot') {
-            item.classList.add('messager__message_left');
-            time.classList.add('messager__time_left');
+        const item = createDiv('roller__item');
+        const tag = createDiv('tag', 'chat_msg');
+
+        if (msg.type === 'bot') {
+            item.classList.add('left');
+            tag.classList.add('left');
+        } else {
+            item.classList.add('right');
+            tag.classList.add('right');
         }
-        else if (msg.type == 'user') {
-            item.classList.add('messager__message_right');
-            time.classList.add('messager__time_right');
-        }
+
+        tag.innerText = msg.text;
+
+        item.append(tag);
         fragment.appendChild(item);
-        fragment.appendChild(time);
     });
 
     messager.appendChild(fragment);

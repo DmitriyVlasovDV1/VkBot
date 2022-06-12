@@ -90,7 +90,7 @@ def bot_chat():
             #print(f'sending: {response}')
             return response
 
-    return render_template('index.html')
+    return render_template('nd_index.html')
 
 @app.route('/statistics')
 def bot_statistics():

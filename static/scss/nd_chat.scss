@@ -1,0 +1,87 @@
+@import "nd_common.scss";
+
+
+.tag {
+    &.bot_name {
+        // size
+        width: 100%;
+        height: 50px;
+
+        // appearance
+        background-color: $color_white;
+        border: 1px $color_white solid;
+        //@extend %tmpldebug;
+
+
+        // postition
+        margin-left: 3px;
+        margin-right: 3px;
+
+        // children
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        @include text(18px, $color_gray);
+
+        & .item:nth-child(1) {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        & .item:nth-child(2) {
+            flex-basis: 15%;
+        }
+
+        & .item:nth-child(3) {
+            flex-basis: 15%;
+        }
+    }
+
+    &.chat_msg {
+        // size
+        min-height: 50px;
+        min-width: 100px;
+        max-width: 70%;
+
+
+        // appearance
+        background-color: $color_white;
+        border: 1px $color_white solid;
+
+        overflow-wrap: break-word;
+        overflow: hidden;
+
+
+        // children
+        padding: 10px;
+        //@extend %tmpldebug;
+
+        &.right {
+            border-radius: $border_curve $border_curve $border_curve_2 $border_curve;
+        }
+
+        &.left {
+            border-radius: $border_curve $border_curve $border_curve $border_curve_2;
+        }
+
+        // children
+        @include text(15px, $color_gray);
+
+    }
+}
+
+
+
+textarea {
+    // size
+    width: 90%;
+    height: 80%;
+
+    // children
+    @include text(15px, $color_white);
+
+    // appearance
+    @extend %custom_scroll;
+
+    //@extend %tmpldebug;
+}

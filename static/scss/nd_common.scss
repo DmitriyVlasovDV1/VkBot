@@ -1,4 +1,5 @@
 @import "null_style.scss";
+
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 %tmpldebug {
     background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
@@ -12,102 +13,167 @@ $size_nt_icons: 25px;
 $size_side_icons: 170px;
 
 // colors
-$color_black: #000000;
-$color_blue: #0087DD;
-$color_white: white;
+$color_empty: rgba(255, 255, 255, 0);
+$color_orange: #F05E43;
+$color_yellow:#F79C38;
+$color_green: #2e933b86;
+$color_white: #EAFFDA;
+$color_light_green: #EAFFDA;
+$color_gray: #20241B;
 
+// curvatures
+$border_curve: 30px;
+$border_curve_2: $border_curve / 5;
 
 // pics
 $icon_account: url("/static/images/account2.jpg");
 $icon_logo: url("/static/images/logo.png");
-$icon_vk: url("/static/images/icon_vk.png");
-$icon_tg: url("/static/images/icon_tg.png");
-$icon_steam: url("/static/images/icon_steam.jpg");
-$icon_inst: url("/static/images/icon_inst.png");
+$icon_vk: url("/static/images/icon_vk_2.png");
+$icon_tg: url("/static/images/icon_tg_2.png");
+$icon_steam: url("/static/images/icon_steam_2.png");
+$icon_inst: url("/static/images/icon_inst_2.png");
 $img_background: url("/static/images/background.png");
+$button_plus: url("/static/images/button_plus.png");
+$button_arrows: url("/static/images/button_arrows.png");
+$button_cross: url("/static/images/button_cross.png");
+$button_check: url("/static/images/button_check.png");
 
+// utils
 @mixin text($size, $color) {
     color:$color;
     font-size: $size;
     font-family: 'Comfortaa', cursive;
 }
 
-.main_container {
-    display: flex;
-    flex-direction: column;
+
+// global elements
+%custom_scroll {
+    &::-webkit-scrollbar {
+        width: 5px;
+        //@extend %tmpldebug;
+    }
+     
+    &::-webkit-scrollbar-track {
+        //@extend %tmpldebug;
+    }
+     
+    &::-webkit-scrollbar-thumb {
+        background-color: $color_white;
+        border-radius: 5px;
+    }
 }
 
+// input
+input {
+    @include text(15, $color_white);
+    background-color: $color_empty;
+
+    width: 100%;
+}
+
+textarea {
+    background: none;
+    resize: none;
+}
+
+
+.main_container {
+    // chidren
+    overflow: hidden;
+}
+
+// container for header items
 .header {
+    // position
+    position: fixed;
+    z-index: 1;
+
+    // size
     height: $header_height;
     width: 100%;
-    height: 70px;
 
+    // children
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
-    background-color: $color_black;
-    border-width: 0px 0px 1px 0px;
-    border-color: $color_white;
-    border-style: solid;
+    // appearence
+    background-color: $color_empty;
+
 
     &__item {
 
+        // social networks switcher
         &:nth-child(1) {
+            // size
             flex-basis: 15%;
+            // childen
             display: flex;
             justify-content: center;
             //@extend %tmpldebug;
         }
 
+        // nav
         &:nth-child(2) {
+            // size
             flex-basis: 70%;
             //@extend %tmpldebug;
         }
 
+        // account icon
         &:nth-child(3) {
+            // size
             flex-basis: 15%;
+            // children
             display: flex;
             justify-content: center;
             //@extend %tmpldebug;
         }
     }
 
+    // account button
     &__account {
+        // animation
+        transition: all 0.2s ease-out;
 
+
+        // outer circle
         &.outer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            // size
             height: $size_account;
             width: $size_account;
 
-            border-radius: 100%;
+            // children
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            // appearance
+            border-radius: 1000px;
             border-width: 2px;
             border-color: $color_white;
             border-style: solid;
         }
 
-
-        transition: all 0.2s ease-out;
-
-
+        // inner circle
         &.inner {
+            // size
             height: $size_account * 0.8;
             width: $size_account * 0.8;
 
+            // apppearance
             background-image: $icon_account;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-
-            border-radius: 100%;
+            border-radius: 1000px;
             border-width: 2px;
             border-style: solid;
             border-color: $color_white;
 
             &:hover {
+                // animation
                 transition: all 0.2s ease-out;
                 transform: scale(1.25);
             }
@@ -118,122 +184,585 @@ $img_background: url("/static/images/background.png");
 
 }
 
+// nav bar
 .progress_bar {
+    // children
     display: flex;
     flex-direction: row;
     justify-content: space-around;
 
     &__item {
-        @include text(20px, white);
+        @include text(20px, $color_white);
+
+        &.active:after {
+            // animation
+            transition: transform 0.3s ease-out;
+            transform: scale(1);
+        }
+
+        &:after {
+            // animation
+            transition: transform 0.3s ease-out;
+            transform: scale(0, 1);
+            content: '';
+            // position
+            position: relative;
+            margin-top: 3px;
+            // appearance
+            display: block;
+            border: solid $color_white;
+            border-width: 1px 0px 0px 0px;
+        }
+
+        &:hover {
+            // animation
+            transform: scale(1.03);
+        }
+
     }
 
     //@extend %tmpldebug;
 
 }
 
+// social networks switcher
 .switcher {
+
+    // size
+    width: 60%;
+
+    // children
+    padding: 5px;
     display: flex;
     justify-content: space-between;
-    width: 60%;
-    padding: 5px;
 
-    border-radius: 20px;
+
+    // appearance
+    border-radius: $border_curve;
     border-width: 2px;
     border-style: solid;
     border-color: $color_white;
 
 
     &__item {
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-
-        border-radius: 100%;
-
+        // size
         height: $size_nt_icons;
         width: $size_nt_icons;
 
+        // appearance
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        border-radius: 100%;
 
         &:nth-child(1) {
+            // appearance
             background-image: $icon_vk;
         }
 
         &:nth-child(2) {
+            // appearance
             background-image: $icon_tg;
         }
 
         &:nth-child(3) {
+            // appearance
             background-image: $icon_steam;
         }
 
         &:nth-child(4) {
+            // appearance
             background-image: $icon_inst;
         }
 
-
         &:hover {
+            // appearance
             border: 2px solid $color_white;
         }
-
-
     }
 
     //@extend %tmpldebug;
 }
 
 
-
 .content {
-    //justify-content: center;
-    //align-items: center;
+    // size
     height: 100%;
-    //overflow: hidden;
 
-    background-color: $color_black;
+    // appearance
+    background: linear-gradient($color_orange, $color_yellow);
+}
+
+.ball {
+    //position
+    position: absolute;
+
+
+    // appearance
+    border-radius: 1000px;
+
+    background: linear-gradient($color_yellow, $color_orange);
+
+    &.animate {
+        transition: transform 0.6s ease-out;
+    }
+
+    &:nth-child(1) {
+        //height: 130px;
+        //width: 130px;
+        top: 20%;
+        left: 10%;
+    }
+
+    &:nth-child(2) {
+        height: 250px;
+        width: 250px;
+
+        top: 40%;
+        left: 35%;
+    }
+
+
+    &:nth-child(3) {
+        height: 180px;
+        width: 180px;
+        top: 30%;
+        right: 10%;
+    }
+
+    &:nth-child(4) {
+        height: 180px;
+        width: 180px;
+        top: 25%;
+        right: 30%;
+    }
 
 }
 
+// slider roll
 .slider {
-    cursor: move;
 
+    // position
     position: relative;
+
+    // size
+    height: 100%;
+    width: 100%;
+
+    // children
     display: flex;
     justify-content: center;
     overflow: hidden;
-    height:100%;
-    width: 100%;
 
-    background: linear-gradient(#e66465, #9198e5);;
-    //transform: rotate(45deg);
-    @extend %tmpldebug;
+    // appearance
+    cursor: move;
 
+    // slide
     &__slide {
+
+        // position
         position: absolute;
         margin:auto;
+
+        // size
         height: 100%;
-        width: 80%;
+        width: 100%;
 
+        // children
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-        //transition: transform ease;
-
-        background-color: $color_black;
-        @extend %tmpldebug;
+        //@extend %tmpldebug;
 
         &.active {
-            background-color: $color_black;
         }
 
         &.animate {
+            // animation
             transition: transform 0.5s ease;
         }
     }
 
 }
 
+// container on slide
+.container {
+    //@extend %tmpldebug;
+
+    // size
+    height: 80%;
+    width: 80%;
+
+    // children
+    display: grid;
+
+    &.mailing {
+        // position
+        margin: auto;
+
+        // children
+        align-content: center;
+        justify-content: space-around;
+
+        grid-template-columns: 25% 35%;
+        grid-template-rows: 80%;
+        //gap: 40%;
+
+        & .container__item {
+            //@extend %tmpldebug;
+        }
+
+    }
+}
+
+
+// box on slide
+.box {
+
+    // size
+    height: 100%;
+    width: 100%;
+
+    // position
+    position: relative;
+    //@extend %tmpldebug;
+
+    // header
+    &__header {
+        // size
+        width: 90%;
+        height: 50px;
+
+        // position
+        position: absolute;
+        top: -25px;
+        left: -25px;
+
+        // appearance
+        background-color: $color_gray;
+        border-radius: $border_curve;
+
+        // children
+        display: flex;
+        justify-content: center;
+    }
+
+    // content
+    &__content {
+
+        // size
+        height: 100%;
+
+        // children
+        overflow: hidden;
+
+        // appearance
+        background-color: $color_green;
+        border-radius: $border_curve;
+
+    }
+
+    // bottom
+    &__bottom {
+
+        // position
+        position: absolute;
+        bottom: -25px;
+        right: -25px;
+
+        // size
+        width: 80%;
+        height: 50px;
+        //@extend %tmpldebug;
+
+        // appearance
+        background-color: $color_gray;
+        border-radius: $border_curve;
+
+        // children
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        & .mailing {
+            @include text(15px, $color_white);
+
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+    }
+
+
+}
+
+// thing in box header -_-
+.boxheader {
+
+    // position
+    margin-left: 20px;
+    margin-right: 20px;
+
+    // children
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    @include text(15px, $color_white);
+
+    //border-radius: 50px;
+
+    // children
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    // size
+    width: 100%;
+    height: 100%;
+    min-width: 150px;
+
+    &::after {
+        // position
+        margin-left: 30px;
+
+        // size
+        height: 100%;
+        width: 15px;
+
+        // appearance
+        content:' ';
+        border-style: solid;
+        border-color: $color_white;
+        border-width: 1px 1px 1px 0px;
+        border-radius: 0 $border_curve / 5 $border_curve / 5 0;
+
+        //@extend %tmpldebug;
+    }
+
+    &::before {
+        // position
+        margin-right: 30px;
+
+        // size
+        height: 100%;
+        width: 15px;
+
+        // appearance
+        content:' ';
+        border-style: solid;
+        border-color: $color_white;
+        border-width: 1px 0px 1px 1px;
+        border-radius: $border_curve_2 0 0 $border_curve_2;
+
+        //@extend %tmpldebug;
+    }
+
+}
+
+// roller with tags
+.roller {
+    //@extend %tmpldebug;
+    // position
+    height: 100%;
+    overflow-y: scroll;
+    padding-left: 10px;
+    padding-right: 10px;
+    @extend %custom_scroll;
+
+    &__item {
+
+        // position
+        margin-top: 7px;
+
+        // children
+        display: flex;
+
+        //@extend %tmpldebug;
+
+        &:nth-child(1) {
+            margin-top: 25 + 7px;
+        }
+
+        &:nth-last-child(1) {
+            margin-bottom: 25 + 7px;
+        }
+
+
+        &.left {
+            // children
+            justify-content: flex-start;
+
+            // position
+            margin-left: 5px;
+        }
+
+        &.right {
+            // children
+            justify-content: flex-end;
+
+            // position
+            margin-right: 5px;
+        }
+    }
+}
+
+
+// tag
+.tag {
+    background-color: $color_white;
+    border-radius: $border_curve_2;
+
+
+    &.mailing {
+
+        // size
+        width: 100%;
+        height: 50px;
+
+        // appearance
+        background-color: $color_white;
+        border: 1px $color_white solid;
+        //@extend %tmpldebug;
+
+
+        // postition
+        margin-left: 3px;
+        margin-right: 3px;
+
+        // children
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        @include text(18px, $color_gray);
+
+        & .item:nth-child(1) {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        & .item:nth-child(2) {
+            flex-basis: 15%;
+        }
+
+        & .item:nth-child(3) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+        & .item:nth-child(4) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+    }
+
+    &.mailingmsg {
+        width: 100%;
+        height: 50px;
+
+        //@extend %tmpldebug;
+
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin-left: 3px;
+        margin-right: 3px;
+        @include text(18px, $color_gray);
+
+        & .item:nth-child(1) {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        & .item:nth-child(2) {
+            flex-basis: 15%;
+        }
+
+        & .item:nth-child(3) {
+            flex-basis: 15%;
+            height: 25px;
+        }
+
+    }
+}
+
+
+.popup{
+    // position
+    position:absolute;
+    z-index: 2;
+    top:0px;
+
+    // size
+    width:100%;
+    height: 100%;
+
+    // appearance
+    background: linear-gradient($color_orange, $color_yellow);
+
+    // children
+    overflow:hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &.close {
+        top: 200000px;
+    }
+}
+
+.popup_window {
+    width: 40%;
+    height: 600px;
+
+    &__header {
+        display: flex;
+        width:100%;
+        border: dashed  $color_white;
+        border-width: 0px 0px 1px 0px;
+
+        &_item:nth-child(1) {
+            padding: 10px;
+            flex-grow: 1;
+            @include text(15px, $color_white)
+
+        }
+
+        &_item:nth-child(2) {
+            flex-basis: 15%;
+            padding: 10px;
+            @include text(15px, $color_white);
+
+            &:hover {
+                transform: scale(1.03);
+            }
+        }
+
+        &_item:nth-child(3) {
+            flex-basis: 15%;
+            padding: 10px;
+            @include text(15px, $color_white);
+
+            &:hover {
+                transform: scale(1.03);
+            }
+            //@extend %tmpldebug;
+        }
+
+
+        //@extend %tmpldebug;
+    }
+
+    &_content {
+        padding: 20px;
+    }
+}
 
 .cover {
+    pointer-events: none;
     position: fixed;
-    z-index: 2;
+    z-index: 3;
 
     display: flex;
     flex-direction: row;
@@ -251,89 +780,87 @@ $img_background: url("/static/images/background.png");
         &.right {
             display: flex;
             flex-direction: column;
-        }
 
+            & .cover__strip {
+                border-width: 0px 1px 0px 0px;
+            }
+
+        }
+        
         &.left {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-        }
 
-    }
-
-    &__icon {
-        position: fixed;
-        top: 300px;
-        padding: 15px;
-
-        &.left {
-            transform: rotate(12deg) translate(-28px, 0px);
-        }
-
-        &.right {
-            transform: rotate(-12deg) translate(28px, 0px);
-            right: 0px;
-        }
-
-
-        height: $size_side_icons;
-        width: $size_side_icons;
-        background-color: white;
-
-        & > div {
-            background-image: $icon_logo;
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-
-            height: 100%;
-            width: 100%;
-        }
-
-        transition: all 0.1s ease-out;
-        &:hover {
-            transition: all 0.1s cubic-bezier(0,.86,1,1.9);
-
-            &.left {
-                transform: rotate(15deg) translate(-20px, 0px);
+            & .cover__strip {
+                border-width: 0px 0px 0px 1px;
             }
-            &.right {
-                transform: rotate(-15deg) translate(20px, 0px);
-            }
-
         }
     }
-
 
     &__strip {
-        width: 400px;
+        border: solid $color_white;
+        background-color: $color_yellow;
+
+        //transition: all 0.2s ease-out;
         //@extend %tmpldebug;
+
+        &.open {
+            transition: all 0.8s ease; // move time
+            background-color: $color_yellow;
+        }
+
+        &.close {
+            transition: all 0.8s ease; // move time
+            background-color: $color_orange;
+        }
+    }
+}
+
+
+.button {
+    // size
+    height: 25px;
+    width:  25px;
+
+    // animation
+    transition: all 0.1s ease-out;
+
+    &:hover {
+        transition: all 0.1s ease-out;
+        transform: scale(1.1);
+    }
+
+    &.plus {
+        background-image: $button_plus;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.arrows {
+        background-image: $button_arrows;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.cross {
+        background-image: $button_cross;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    &.check {
+        background-image: $button_check;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
     }
 
 
-    //@extend %tmpldebug;
+
+
 }
 
-.tmp {
-    position: absolute;
-    top: 300px;
-    left: -25px;
-    transform: rotate(12deg);
-    padding: 15px;
-
-    //@extend %tmpldebug;
-    background-color: white;
-}
-
-.icon {
-    background-image: $icon_inst;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-
-
-    height: 180px;
-    width: 180px;
-
-    //@extend %tmpldebug;
-}

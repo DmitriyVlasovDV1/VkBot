@@ -14,6 +14,8 @@ def assignments(element, gap=', '):
 
 # database class
 class database:
+
+    
     def __init__(self):
         with self.get_connection() as connection:
             with connection.cursor() as cursor:
@@ -46,7 +48,7 @@ class database:
                                                 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE)'
                 cursor.execute(command)
 
-                # id: self id | debug_user_name: debug user name | type: type of ??? |
+                # id: self id | debug_user_name: debug user name | type: bot / user |
                 # text: content text | date: sending date
                 command = 'CREATE TABLE IF NOT EXISTS debug_messages (\
                                                 id INT PRIMARY KEY AUTO_INCREMENT,\
@@ -123,6 +125,7 @@ class database:
                                                 FOREIGN KEY (mailing_id) REFERENCES mailings (id) ON DELETE CASCADE)'
                 cursor.execute(command)
             connection.commit()
+            self.connection = connection
 
 
     # try connect to db
@@ -137,7 +140,7 @@ class database:
     # add one 'element' record in 'table_name' table
     def add_one(self, table_name, element={}):
         id = -1
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command = f"INSERT IGNORE INTO { table_name } ({ parameters(list(element.keys())) }) VALUES ({ arguments(list(element.values())) })"
                 cursor.execute(command)
@@ -147,7 +150,7 @@ class database:
 
     # get all records in 'table_name' table with 'element' template
     def get_all(self, table_name, element={}):
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command = f"SELECT * FROM { table_name }"
                 if len(element) != 0:
@@ -160,7 +163,7 @@ class database:
 
     # get one record in 'table_name' table with 'element' template
     def get_one(self, table_name, element={}):
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command = f"SELECT * FROM { table_name }"
                 if len(element) != 0:
@@ -180,7 +183,7 @@ class database:
     def update_all(self, table_name, value, element={}):
         if len(value) == 0:
             return
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command = f"UPDATE { table_name } SET { assignments(value) }"
                 if len(element) != 0:
@@ -193,7 +196,7 @@ class database:
 
     # delete all records in 'table_name' table with 'element' template
     def delete_all(self, table_name, element={}):
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command = f"DELETE FROM { table_name }"
                 if len(element) != 0:
@@ -206,7 +209,7 @@ class database:
 
     # fill 'field_name' field with numbers  0..n in 'element' template records
     def numerate_all(self, table_name, field_name='num', element={}):
-        with self.get_connection() as connection:
+        with self.connection as connection:
             with connection.cursor() as cursor:
                 command1 = f"SET @row_num := 0"
                 command2 = f"UPDATE { table_name } SET { field_name } = (@row_num := @row_num + 1)"
