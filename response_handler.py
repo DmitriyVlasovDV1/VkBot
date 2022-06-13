@@ -5,6 +5,7 @@ import bot_settings
 from database import database
 from datetime import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+from new_db import *
 
 
 class response_handler:
@@ -20,7 +21,7 @@ class response_handler:
     # setup mailing scheduler
     def setup_mailing_scheduler(self):
         self.mailing_scheduler.remove_all_jobs()
-        messages = self.db.get_all('mailing_messages')
+        messages = self.db.get_all(MailingMessages)
 
         cur_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         for msg in messages:
@@ -31,33 +32,33 @@ class response_handler:
     # send mailing message
     def send_mailing_message(self, msg):
 
-        if not self.db.is_one('mailings', {'id': msg['mailing_id']}):
+        if not self.db.is_one(Mailings, {'id': msg['mailing_id']}):
             return
 
-        mailing = self.db.get_one('mailings', {'id': msg['mailing_id']})
+        mailing = self.db.get_one(Mailings, {'id': msg['mailing_id']})
 
         if not mailing['is_active']:
             return
 
-        links = self.db.get_all('mailing_and_user', {'mailing_id': msg['mailing_id']})
+        links = self.db.get_all(MailingAndUser, {'mailing_id': msg['mailing_id']})
 
         for link in links:
-            if not self.db.is_one('users', {'id': link['user_id']}):
+            if not self.db.is_one(Users, {'id': link['user_id']}):
                 continue
 
-            user = self.db.get_one('users', {'id': link['user_id']})
+            user = self.db.get_one(Users, {'id': link['user_id']})
 
             self.send_message(user['id'], msg['text'])
         return
 
     # send message to user
     def send_message(self, user_id, text):
-        debug_user = self.db.get_one('debug_users', {'user_id': user_id})
+        debug_user = self.db.get_one(DebugUsers, {'user_id': user_id})
         if debug_user != None: # check is debug user
             now = datetime.now()
             formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
-            self.db.add_one('debug_messages', {'debug_user_name': debug_user['name'], 'type': 'bot', 'text': text, 'date': formatted_date})
+            self.db.add_one(DebugMessages, {'debug_user_name': debug_user['name'], 'type': 'bot', 'text': text, 'date': formatted_date})
         else:
             self.api.messages.send(access_token=bot_settings.ACCESS_TOKEN,
                 user_id=str(user_id),
@@ -70,11 +71,11 @@ class response_handler:
         if 'body' not in data.keys() or 'user_id' not in data.keys():
             return
 
-        if self.db.get_one('users', {'id': data['user_id']}) == None:
+        if self.db.get_one(Users, {'id': data['user_id']}) == None:
             return
 
         # get user
-        user = self.db.get_one('users', {'id': data['user_id']})
+        user = self.db.get_one(Users, {'id': data['user_id']})
 
         # run current session
         if user['session'] == 'start':
@@ -93,12 +94,12 @@ class response_handler:
 
     # update session in database
     def update_session(self, user_id, session, phase):
-        self.db.update_all('users', {'session': session, 'phase': phase}, {'id': user_id})
+        self.db.update_all(Users, {'session': session, 'phase': phase}, {'id': user_id})
         return
 
     # clear tmp list for user
     def list_erase(self, user_id):
-        self.db.delete_all('list', {'user_id': user_id})
+        self.db.delete_all(List, {'user_id': user_id})
         return
 
     # add value to tmp list
@@ -108,12 +109,12 @@ class response_handler:
             element['text'] = value
         elif type == 'num':
             element['num'] = value
-        self.db.add_one('list', element)
+        self.db.add_one(List, element)
         return
 
     # get values from tmp list
     def list_get(self, user_id):
-        elements = self.db.get_all('list', {'user_id': user_id})
+        elements = self.db.get_all(List, {'user_id': user_id})
 
         res = []
         for value in elements:
@@ -224,7 +225,7 @@ class response_handler:
         # information
         if phase == 0:
 
-            self.db.numerate_all('mailings', 'num', {'is_active': 1})
+            #self.db.numerate_all('mailings', 'num', {'is_active': 1})
 
             user_and_mail = self.db.get_all('mailing_and_user', {'user_id': data['user_id']})
 

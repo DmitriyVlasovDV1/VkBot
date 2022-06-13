@@ -7,17 +7,32 @@ from datetime import datetime
 from flask import Flask, request, json, jsonify, render_template, session, flash, make_response
 from flask.sessions import NullSession
 from flask.wrappers import Response
+from flask_sqlalchemy import SQLAlchemy
 
 # My modules
-from database import db
-from response_handler import response_handler
 import statistics
 from statistics import components
+import bot_settings
 
+# App configuration
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{bot_settings.DB_USER}:{bot_settings.DB_PASSWORD}@{bot_settings.DB_HOST}/{bot_settings.DB_NAME}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.urandom(24)
 
-res_hand = response_handler(db)
+# db
+db = SQLAlchemy(app)
+
+# database tables
+from response_handler import *
+
+
+# tmp creation
+db.create_all()
+
+# response handler
+dbw = DBWrapper(db)
+res_hand = response_handler(dbw)
 
 @app.route('/', methods=["POST", "GET"])
 def bot_chat():
@@ -35,19 +50,20 @@ def bot_chat():
             session['current_user'] = ''
 
         if data['type'] == 'update':
-            debug_users = db.get_all('debug_users')
-            messages = db.get_all('debug_messages', {'debug_user_name': session['current_user']})
+            debug_users = dbw.get_all(DebugUsers)
+            messages = dbw.get_all(DebugMessages, {'debug_user_name': session['current_user']})
             response = {'debug_users': debug_users, 'current_user': session['current_user'], 'messages': messages}
             #print(f'sending:\n{response}')
             return response
 
         if data['type'] == 'add_user':
             name = data['user_name'].strip()
-            if not db.is_one('debug_users', {'name': name}):
-                user_id = db.add_one('users', {'type': 'debug', 'session': 'default', 'phase': 0})
-                db.add_one('debug_users', {'name': name, 'user_id': user_id})
+            if not dbw.is_one(DebugUsers, {'name': name}):
+                user_id = dbw.add_one(Users, {'type': 'debug', 'session': 'default', 'phase': 0})
+                dbw.add_one(DebugUsers, {'name': name, 'user_id': user_id})
 
-            debug_users = db.get_all('debug_users')
+            debug_users = dbw.get_all(DebugUsers)
+            print(debug_users)
             response = {'debug_users': debug_users}
             #print(f'sending: {response}')
             return response
@@ -57,10 +73,10 @@ def bot_chat():
                 session['current_user'] = ''
 
             name = data['user_name'].strip()
-            debug_user = db.get_one('debug_users', {'name': name})
-            db.delete_all('users', {'id': debug_user['user_id']})
+            debug_user = dbw.get_one(DebugUsers, {'name': name})
+            dbw.delete_all(Users, {'id': debug_user['user_id']})
             
-            debug_users = db.get_all('debug_users')
+            debug_users = dbw.get_all(DebugUsers)
             response = {'debug_users': debug_users}
             #print(f'sending: {response}')
             return response
@@ -68,7 +84,7 @@ def bot_chat():
         if data['type'] == 'select_user':
             session['current_user'] = data['user_name']
 
-            messages = db.get_all('debug_messages', {'debug_user_name': session['current_user']})
+            messages = dbw.get_all(DebugMessages, {'debug_user_name': session['current_user']})
             response = {'current_user': session['current_user'], 'messages': messages}
             #print(f'sending: {response}')
             return response
@@ -80,12 +96,12 @@ def bot_chat():
             now = datetime.now()
             formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
 
-            db.add_one('debug_messages', {'debug_user_name': session['current_user'], 'type': 'user', 'text': data['text'], 'date': formatted_date})
+            dbw.add_one(DebugMessages, {'debug_user_name': session['current_user'], 'type': 'user', 'text': data['text'], 'date': formatted_date})
 
-            user_id = db.get_one('debug_users', {'name': session['current_user']})['user_id']
+            user_id = dbw.get_one(DebugUsers, {'name': session['current_user']})['user_id']
             res_hand.run_session({'user_id': user_id, 'body': data['text']})
 
-            messages = db.get_all('debug_messages', {'debug_user_name': session['current_user']})
+            messages = dbw.get_all(DebugMessages, {'debug_user_name': session['current_user']})
             response = {'current_user': session['current_user'], 'messages': messages}
             #print(f'sending: {response}')
             return response
@@ -126,7 +142,7 @@ def bot_mailing():
 
         # req for update (selector)
         if data['type'] == 'update':
-            mailings = db.get_all('mailings')
+            mailings = dbw.get_all(Mailings)
             response = {'mailings': mailings, 'exeError': ''}
             return response
 
@@ -134,41 +150,41 @@ def bot_mailing():
         if data['type'] == 'add_mailing':
             name = data['mailing_name'].strip()
             execution_error = ''
-            if not db.is_one('mailings', {'name': name}):
-                db.add_one('mailings', {'name': name, 'is_active': 0})
+            if not dbw.is_one(Mailings, {'name': name}):
+                dbw.add_one(Mailings, {'name': name, 'is_active': 0})
             else:
                 execution_error = 'existing name'
 
-            mailings = db.get_all('mailings')
+            mailings = dbw.get_all(Mailings)
             response = {'mailings': mailings, 'exeError': execution_error}
             return response
 
         # req for deleting mailing
         if data['type'] == 'delete_mailing':
             mailing = data['mailing']
-            if db.is_one('mailings', {'id': mailing['id']}):
-                db.delete_all('mailings', {'id': mailing['id']})
+            if dbw.is_one(Mailings, {'id': mailing['id']}):
+                dbw.delete_all(Mailings, {'id': mailing['id']})
 
-            mailings = db.get_all('mailings')
+            mailings = dbw.get_all(Mailings)
             response = {'mailings': mailings, 'exeError': ''}
             return response
 
         # req for update mailing
         if data['type'] == 'update_mailing':
             mailing = data['mailing']
-            if db.is_one('mailings', {'id': mailing['id']}):
-                db.update_all('mailings', {'is_active': mailing['is_active'], 'name': mailing['name']}, {'id': mailing['id']})
+            if dbw.is_one(Mailings, {'id': mailing['id']}):
+                dbw.update_all(Mailings, {'is_active': mailing['is_active'], 'name': mailing['name']}, {'id': mailing['id']})
 
-            mailings = db.get_all('mailings')
+            mailings = dbw.get_all(Mailings)
             response = {'mailings': mailings, 'exeError': ''}
             return response
 
         # req for selecting mailing
         if data['type'] == 'select_mailing':
             mailing = data['mailing']
-            if db.is_one('mailings', {'id': mailing['id']}):
+            if dbw.is_one(Mailings, {'id': mailing['id']}):
                 session['current_mailing_id'] = mailing['id']
-                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                messages = db.get_all(MailingMessages, {'mailing_id': mailing['id']})
                 response = {'current_mailing': mailing, 'messages': messages, 'exeError':''}
                 return response
             return {}
@@ -184,18 +200,18 @@ def bot_mailing():
 
             execution_error = ''
 
-            if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
-                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
+            if session['current_mailing_id'] != -1 and dbw.is_one(Mailings, {'id': session['current_mailing_id']}):
+                mailing = dbw.get_one(Mailings, {'id': session['current_mailing_id']})
 
-                if db.is_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}):
+                if dbw.is_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}):
                     execution_error = 'existing name'
                 else:
                     if time != None:
-                        db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active, 'time': time})
+                        dbw.add_one(MailingMessages, {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active, 'time': time})
                     else:
-                        db.add_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active})
+                        dbw.add_one(MailingMessages, {'mailing_id': session['current_mailing_id'], 'name': name, 'text': text, 'is_active': is_active})
 
-                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                messages = dbw.get_all(MailingMessages, {'mailing_id': mailing['id']})
                 response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
                 res_hand.setup_mailing_scheduler()
                 return response
@@ -209,14 +225,14 @@ def bot_mailing():
             time = msg['time']
 
             execution_error = ''
-            if session['current_mailing_id'] != -1 and db.is_one('mailings', {'id': session['current_mailing_id']}):
-                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
-                if db.is_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}) and \
-                    (db.get_one('mailing_messages', {'mailing_id': session['current_mailing_id'], 'name': name}))['id'] != msg['id']:
+            if session['current_mailing_id'] != -1 and dbw.is_one(Mailings, {'id': session['current_mailing_id']}):
+                mailing = dbw.get_one(Mailings, {'id': session['current_mailing_id']})
+                if dbw.is_one(MailingMessages, {'mailing_id': session['current_mailing_id'], 'name': name}) and \
+                    (dbw.get_one(MailingMessages, {'mailing_id': session['current_mailing_id'], 'name': name}))['id'] != msg['id']:
                     execution_error = 'existing name'
                 else:
-                    db.update_all('mailing_messages', {'name': name, 'text': text, 'is_active': is_active, 'time': time}, {'id': msg['id']})
-                messages = db.get_all('mailing_messages', {'mailing_id': mailing['id']})
+                    dbw.update_all(MailingMessages, {'name': name, 'text': text, 'is_active': is_active, 'time': time}, {'id': msg['id']})
+                messages = dbw.get_all(MailingMessages, {'mailing_id': mailing['id']})
                 response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
                 res_hand.setup_mailing_scheduler()
                 return response
@@ -227,9 +243,9 @@ def bot_mailing():
             execution_error = ''
 
             if session['current_mailing_id'] != -1:
-                mailing = db.get_one('mailings', {'id': session['current_mailing_id']})
-                db.delete_all('mailing_messages', {'id': msg['id']})
-                messages = db.get_all('mailing_messages', {'mailing_id':  mailing['id']})
+                mailing = dbw.get_one(Mailings, {'id': session['current_mailing_id']})
+                dbw.delete_all(MailingMessages, {'id': msg['id']})
+                messages = dbw.get_all(MailingMessages, {'mailing_id':  mailing['id']})
                 response = {'current_mailing': mailing, 'messages': messages, 'exeError': execution_error}
                 res_hand.setup_mailing_scheduler()
                 return response
@@ -241,3 +257,4 @@ def bot_mailing():
 
 
     return render_template('mailing.html')
+
