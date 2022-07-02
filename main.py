@@ -75,7 +75,7 @@ def bot_chat():
             name = data['user_name'].strip()
             debug_user = dbw.get_one(DebugUsers, {'name': name})
             dbw.delete_all(Users, {'id': debug_user['user_id']})
-            
+
             debug_users = dbw.get_all(DebugUsers)
             response = {'debug_users': debug_users}
             #print(f'sending: {response}')

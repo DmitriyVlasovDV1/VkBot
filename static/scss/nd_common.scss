@@ -45,7 +45,6 @@ $button_check: url("/static/images/button_check.png");
     font-family: 'Comfortaa', cursive;
 }
 
-
 // global elements
 %custom_scroll {
     &::-webkit-scrollbar {
@@ -61,6 +60,18 @@ $button_check: url("/static/images/button_check.png");
         background-color: $color_white;
         border-radius: 5px;
     }
+}
+
+// preventing highlighting
+body, div
+{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 // input
@@ -759,6 +770,14 @@ textarea {
     }
 }
 
+
+@keyframes anim_close_cover {
+    0% {
+    }
+    100% {
+    }
+}
+
 .cover {
     pointer-events: none;
     position: fixed;
@@ -772,6 +791,7 @@ textarea {
     width: 100%;
 
     &__item {
+        //@extend %tmpldebug;
         height: 100%;
         width: 50%;
 
@@ -782,7 +802,7 @@ textarea {
             flex-direction: column;
 
             & .cover__strip {
-                border-width: 0px 1px 0px 0px;
+                //border-width: 0px 1px 0px 0px;
             }
 
         }
@@ -793,27 +813,59 @@ textarea {
             align-items: flex-end;
 
             & .cover__strip {
-                border-width: 0px 0px 0px 1px;
+                //border-width: 0px 0px 0px 1px;
             }
         }
     }
 
+ 
     &__strip {
         border: solid $color_white;
-        background-color: $color_yellow;
 
         //transition: all 0.2s ease-out;
         //@extend %tmpldebug;
 
+        &.right {
+            border-width: 0px 1px 0px 0px;
+        }
+
+        &.left {
+            border-width: 0px 0px 0px 1px;
+        }
+
+        // anitmation states
         &.open {
-            transition: all 0.8s ease; // move time
             background-color: $color_yellow;
+            width: 0%;
         }
 
         &.close {
-            transition: all 0.8s ease; // move time
             background-color: $color_orange;
+            width: 100%;
         }
+
+        &.title {
+        }
+
+        // transititons
+
+        &.open_to_close {
+            transition: all 0.5s ease-out;
+        }
+        
+        &.close_to_open {
+            transition: all 0.3s ease-in;
+        }
+
+        &.close_to_title {
+        }
+
+        &.title_to_close {
+
+        }
+
+
+
     }
 }
 

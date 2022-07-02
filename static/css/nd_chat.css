@@ -83,6 +83,16 @@ textarea::-webkit-scrollbar-thumb, .roller::-webkit-scrollbar-thumb {
   border-radius: 5px;
 }
 
+body, div {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
+
 input {
   color: #EAFFDA;
   font-size: 15;
@@ -505,6 +515,7 @@ textarea {
   padding: 20px;
 }
 
+@keyframes anim_close_cover {}
 .cover {
   pointer-events: none;
   position: fixed;
@@ -523,30 +534,34 @@ textarea {
   display: flex;
   flex-direction: column;
 }
-.cover__item.right .cover__strip {
-  border-width: 0px 1px 0px 0px;
-}
 .cover__item.left {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
 }
-.cover__item.left .cover__strip {
-  border-width: 0px 0px 0px 1px;
-}
 .cover__strip {
   border: solid #EAFFDA;
-  background-color: #F79C38;
+}
+.cover__strip.right {
+  border-width: 0px 1px 0px 0px;
+}
+.cover__strip.left {
+  border-width: 0px 0px 0px 1px;
 }
 .cover__strip.open {
-  transition: all 0.8s ease;
   background-color: #F79C38;
+  width: 0%;
 }
 .cover__strip.close {
-  transition: all 0.8s ease;
   background-color: #F05E43;
+  width: 100%;
 }
-
+.cover__strip.open_to_close {
+  transition: all 0.5s ease-out;
+}
+.cover__strip.close_to_open {
+  transition: all 0.3s ease-in;
+}
 .button {
   height: 25px;
   width: 25px;

@@ -1,7 +1,3 @@
-
-
-
-
 /*********
  * Utils
  *********/
@@ -290,7 +286,7 @@ function initBalls() {
 
 function dragBalls() {
     for (let i = 0; i < balls.length; i++)  {
-        setCSS(balls[i], 'transform', `translate(${diffX * 0.05 / ballsDist[i]}px, ${diffY * 0.05 / ballsDist[i]}px)`);
+        setCSS(balls[i], 'transform', `translate(${diffX * 0.08 / ballsDist[i]}px, ${diffY * 0.08 / ballsDist[i]}px)`);
     }
 }
 
@@ -327,7 +323,7 @@ const popup = document.getElementById("editor_window");
 
 
 account.addEventListener("click", () => {
-    closeCover(() => {popup.classList.remove("close")});
+    quickCoverClosingAnimation();
 });
 /*
 
@@ -336,8 +332,9 @@ closePopup.addEventListener("click", () => {
 });*/
 
 
-const closingMoveTime = 0.8;
-const closingWaitTime = 0.3;
+const closingCloseTime = 0.5;
+const closingOpenTime = 0.3;
+const closingWaitTime = 0.5;
 const dltClose = 0.2;
 
 const numOfStripes = 20;
@@ -358,7 +355,10 @@ function initStripes() {
     for (let i = 0; i < numOfStripes; i++) {
         let strip = createDiv('cover__strip');
         setCSS(strip, 'height', `${h}px`);
-        setCSS(strip, 'width', `0px`);
+        strip.classList.add('open');
+        strip.classList.add('left');
+
+        //setCSS(strip, 'width', `0px`);
 
         coverLeft.appendChild(strip);
 
@@ -368,7 +368,8 @@ function initStripes() {
     for (let i = 0; i < numOfStripes; i++) {
         let strip = createDiv('cover__strip');
         setCSS(strip, 'height', `${h}px`);
-        setCSS(strip, 'width', `0px`);
+        strip.classList.add('open');
+        strip.classList.add('right');
 
         coverRight.appendChild(strip);
 
@@ -378,61 +379,43 @@ function initStripes() {
 }
 
 
-function closeCover(cb) {
-    if (isCoverClosed)
-        return;
-
-    isCoverClosed = true;
-
-    let curUnit = (Date.now() / 1000) * unitsPerSec;
-    for (let i = 0; i < numOfStripes; i++) {
-        let w1 = cover.offsetWidth / 2;
-        let w2 = cover.offsetWidth / 2;
-        setCSS(coverRight.children[i], 'width', w1);
-        setCSS(coverLeft.children[i], 'width', w2);
-
-        coverRight.children[i].classList.add('close');
-        coverLeft.children[i].classList.add('close');
-        setCSS(coverRight.children[i], 'transition-delay', `${Math.random() * dltClose}s`);
-        setCSS(coverLeft.children[i], 'transition-delay', `${Math.random() * dltClose}s`);
-    }
-
-    setTimeout(openCover, (closingMoveTime + closingWaitTime + dltClose) * 1000);
-    setTimeout(cb, (closingMoveTime + dltClose) * 1000);
-}
-
-function openCover() {
-
-    let curUnit = ((Date.now()) / 1000 + closingMoveTime) * unitsPerSec;
-
-    for (let i = 0; i < numOfStripes; i++) {
-
-        setCSS(coverRight.children[i], 'width', 0);
-        setCSS(coverLeft.children[i], 'width', 0);
-
-        coverRight.children[i].classList.remove('close');
-        coverLeft.children[i].classList.remove('close');
-        coverRight.children[i].classList.add('open');
-        coverLeft.children[i].classList.add('open');
-
-    }
-
-    setTimeout(finalOpenCover, (closingMoveTime + dltClose) * 1000);
-}
-
-function finalOpenCover() {
-    isCoverClosed = false;
+function closeCover() {
 
     for (let i = 0; i < numOfStripes; i++) {
         coverRight.children[i].classList.remove('open');
         coverLeft.children[i].classList.remove('open');
-        setCSS(coverRight.children[i], 'transition-delay', `0s`);
-        setCSS(coverLeft.children[i], 'transition-delay', `0s`);
+        coverRight.children[i].classList.add('open_to_close');
+        coverLeft.children[i].classList.add('open_to_close');
+        coverRight.children[i].classList.add('close');
+        coverLeft.children[i].classList.add('close');
+
+        setCSS(coverRight.children[i], 'transition-delay', `${Math.random() * dltClose}s`);
+        setCSS(coverLeft.children[i], 'transition-delay', `${Math.random() * dltClose}s`);
     }
 
 }
 
+function openCover() {
 
+    for (let i = 0; i < numOfStripes; i++) {
+        coverRight.children[i].classList.remove('close');
+        coverLeft.children[i].classList.remove('close');
+        coverRight.children[i].classList.add('close_to_open');
+        coverLeft.children[i].classList.add('close_to_open');
+        coverRight.children[i].classList.add('open');
+        coverLeft.children[i].classList.add('open');
+    }
+}
+
+
+function fixateCover() {
+    for (let i = 0; i < numOfStripes; i++) {
+        coverRight.children[i].classList.remove('close_to_open');
+        coverLeft.children[i].classList.remove('close_to_open');
+        coverRight.children[i].classList.remove('open_to_close');
+        coverLeft.children[i].classList.remove('open_to_close');
+    }
+}
 
 
 
@@ -444,8 +427,25 @@ function finalOpenCover() {
     initSlider();
     generatePerlinNoise(nofNodes, nofOct);
     initStripes()
-    initBalls();;
+    initBalls();
 });
+
+
+
+
+/**************
+ * Animations
+ **************/
+
+function quickCoverClosingAnimation () {
+    closeCover();
+    isCoverClosed = true;
+    print('p1:', isCoverClosed);
+    setTimeout(fixateCover, (closingCloseTime + dltClose) * 1000);
+    setTimeout(openCover, (closingCloseTime + closingWaitTime + dltClose) * 1000);
+    setTimeout(fixateCover, (closingCloseTime + closingWaitTime + dltClose + closingOpenTime) * 1000);
+    isCoverClosed = false;
+}
 
 
 /*****************
