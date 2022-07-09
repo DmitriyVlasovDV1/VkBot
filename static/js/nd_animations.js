@@ -1,3 +1,4 @@
+
 /*********
  * Utils
  *********/
@@ -26,6 +27,8 @@ function print() {
 }
 
 
+
+
 /**********
  * Slider
  **********/
@@ -34,6 +37,8 @@ function print() {
 const slider = document.getElementById("slider");
 const slides = document.querySelectorAll(".slider__slide");
 const progressBar = document.getElementById("progress_bar");
+
+
 
 
 // glabal varialbes
@@ -63,10 +68,21 @@ function initSlider() {
 
     for (let i = 0; i < slides.length; i++) {
         progressBar.children[i].addEventListener('click', () => {
+            for (let j = 0; j < balls.length; j++)  {
+                balls[j].classList.add('animate');
+                setCSS(balls[j], 'transform', `translate(${0}px, ${(curSlide - i) * 20 / ballsDist[j]}px)`);
+            }
+
+            setTimeout(returnBalls, ballAnimationTime * 1000);
+        
             changeSlide(i);
             showCurrentSlide();
         })
     }
+
+    
+
+    
 }
 
 // show current slide
@@ -281,7 +297,9 @@ function initBalls() {
     for (let i = 0; i < balls.length; i++)  {
         setCSS(balls[i], 'height', `${ballSize / ballsDist[i]}px`);
         setCSS(balls[i], 'width', `${ballSize / ballsDist[i]}px`);
+        setCSS(balls[i], 'opacity', `${0.81 / Math.pow(ballsDist[i], 1.4)}`);
     }
+
 }
 
 function dragBalls() {
@@ -296,8 +314,6 @@ function returnBalls() {
         setCSS(balls[i], 'transform', `translate(${0}px, ${0}px)`);
 
         setTimeout(() => {
-            isSlidesAnimating = false;
-
             balls.forEach((el) => {
                 el.classList.remove('animate');
             });
@@ -316,15 +332,11 @@ const unitsPerSec = 0.1;
 const coverRight = document.getElementById("cover_right");
 const coverLeft = document.getElementById("cover_left");
 const cover = document.getElementById("cover");
+const topCover = document.getElementById("top_cover");
 
-const account = document.getElementById("account");
-const closePopup = document.getElementById("button_editor_close");
-const popup = document.getElementById("editor_window");
+const topCoverStripes = document.getElementsByName("top_cover_strip");
 
 
-account.addEventListener("click", () => {
-    quickCoverClosingAnimation();
-});
 /*
 
 closePopup.addEventListener("click", () => {
@@ -332,10 +344,12 @@ closePopup.addEventListener("click", () => {
 });*/
 
 
-const closingCloseTime = 0.5;
+const closingCloseTime = 0.6;
 const closingOpenTime = 0.3;
 const closingWaitTime = 0.5;
-const dltClose = 0.2;
+const preTitleTime = 0.2;
+const titleWaitTime = 0.4;
+const dltClose = 0.25;
 
 const numOfStripes = 20;
 const stride = 0.05;
@@ -381,6 +395,8 @@ function initStripes() {
 
 function closeCover() {
 
+    print('closing');
+
     for (let i = 0; i < numOfStripes; i++) {
         coverRight.children[i].classList.remove('open');
         coverLeft.children[i].classList.remove('open');
@@ -396,6 +412,8 @@ function closeCover() {
 }
 
 function openCover() {
+
+    print('opening');
 
     for (let i = 0; i < numOfStripes; i++) {
         coverRight.children[i].classList.remove('close');
@@ -419,6 +437,7 @@ function fixateCover() {
 
 
 
+
 /**************
  * Start point
  **************/
@@ -428,6 +447,10 @@ function fixateCover() {
     generatePerlinNoise(nofNodes, nofOct);
     initStripes()
     initBalls();
+
+    
+
+    longCoverClosingAnimation();
 });
 
 
@@ -436,17 +459,65 @@ function fixateCover() {
 /**************
  * Animations
  **************/
-
-function quickCoverClosingAnimation () {
+function quickCoverClosingAnimation(cb) {
     closeCover();
     isCoverClosed = true;
-    print('p1:', isCoverClosed);
     setTimeout(fixateCover, (closingCloseTime + dltClose) * 1000);
+    setTimeout(cb, (closingCloseTime + dltClose) * 1000);
     setTimeout(openCover, (closingCloseTime + closingWaitTime + dltClose) * 1000);
     setTimeout(fixateCover, (closingCloseTime + closingWaitTime + dltClose + closingOpenTime) * 1000);
     isCoverClosed = false;
 }
 
+function longCoverClosingAnimation() {
+    //closeCover();
+    isCoverClosed = true;
+    //setTimeout(fixateCover, (closingCloseTime + dltClose) * 1000);
+
+    topCover.classList.add('close');
+    setTimeout(showCompanyName, 1000);
+
+}
+
+function showCompanyName() {
+    topCover.classList.remove('close');
+
+    topCoverStripes.forEach((el) => {
+        el.classList.remove('close');
+        el.classList.add('open');
+    });
+    
+    
+}
+
+
+/**********
+ * Popups
+ **********/
+
+ const account = document.getElementById("account");
+ const closePopup = document.getElementById("button_editor_close");
+ const popup = document.getElementById("mailing_editor_window");
+ 
+ 
+ account.addEventListener("click", () => {
+     longCoverClosingAnimation();
+ });
+  
+ 
+ const closePopupButtons = document.getElementsByName('close_popup_button');
+ 
+ 
+ closePopupButtons.forEach((btn) => {
+
+    print('smth');
+
+    btn.addEventListener('click', () => {
+        quickCoverClosingAnimation(() => {
+            popup.classList.add('close');
+        });
+    });
+ })
 
 /*****************
  * A pure kal
@@ -578,3 +649,7 @@ function quickCoverClosingAnimation () {
 //         return this;
 //     }
 // }
+
+
+
+

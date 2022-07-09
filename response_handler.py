@@ -10,7 +10,7 @@ from new_db import *
 
 class response_handler:
     def __init__(self, db):
-        self.session = vk.Session()
+        self.session = vk.session
         self.api = vk.API(self.session, v='5.50')
         self.db = db
         self.mailing_scheduler = BackgroundScheduler()

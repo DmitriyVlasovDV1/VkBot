@@ -1,8 +1,9 @@
-@import "null_style.scss";
+        @import "null_style.scss";
 
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa&display=swap');
 %tmpldebug {
-    background-color: rgba(255, 3, 3, 0.26); border: 2px solid rgb(72, 216, 72);
+    background-color: rgba(255, 0, 0, 0.5);
+    border: 2px solid rgb(72, 216, 72);
 }
 
 
@@ -11,15 +12,26 @@ $header_height: 70px;
 $size_account: 50px;
 $size_nt_icons: 25px;
 $size_side_icons: 170px;
+$header_height_2: 50px;
 
 // colors
-$color_empty: rgba(255, 255, 255, 0);
-$color_orange: #F05E43;
-$color_yellow:#F79C38;
-$color_green: #2e933b86;
-$color_white: #EAFFDA;
-$color_light_green: #EAFFDA;
-$color_gray: #20241B;
+$empty_color: rgba(255, 255, 255, 0);
+
+$main_color_1: #4079AD;
+$main_color_2:#4E9767;
+$main_color_3: #448199;
+$main_color_4: #498C80;
+
+$ball_color_1: #386376;
+$ball_color_2: #5DA37E;
+
+$element_color_1: rgba(255, 255, 255, 0.11);
+$color_white: #ffffff;
+$text_color_1: #ffffff;
+$text_color_2: rgb(206, 240, 255);
+$element_color_2: rgba(133, 209, 214, 0.8);
+
+$background_gradient: linear-gradient(219.58deg, $main_color_1 0.96%, $main_color_3 24.18%, $main_color_4 82.85%, $main_color_2 100%);
 
 // curvatures
 $border_curve: 30px;
@@ -48,6 +60,7 @@ $button_check: url("/static/images/button_check.png");
 // global elements
 %custom_scroll {
     &::-webkit-scrollbar {
+        display: none;
         width: 5px;
         //@extend %tmpldebug;
     }
@@ -60,6 +73,11 @@ $button_check: url("/static/images/button_check.png");
         background-color: $color_white;
         border-radius: 5px;
     }
+}
+
+// date picker
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 // preventing highlighting
@@ -76,10 +94,15 @@ body, div
 
 // input
 input {
-    @include text(15, $color_white);
-    background-color: $color_empty;
+    @include text(15px, $text_color_1);
+    background-color: $empty_color;
 
     width: 100%;
+
+    &::placeholder {
+        @include text(15px, $text_color_2);
+    }
+
 }
 
 textarea {
@@ -110,7 +133,7 @@ textarea {
     align-items: center;
 
     // appearence
-    background-color: $color_empty;
+    background-color: $empty_color;
 
 
     &__item {
@@ -163,7 +186,7 @@ textarea {
             // appearance
             border-radius: 1000px;
             border-width: 2px;
-            border-color: $color_white;
+            border-color: $text_color_1;
             border-style: solid;
         }
 
@@ -181,7 +204,7 @@ textarea {
             border-radius: 1000px;
             border-width: 2px;
             border-style: solid;
-            border-color: $color_white;
+            border-color: $text_color_1;
 
             &:hover {
                 // animation
@@ -203,7 +226,7 @@ textarea {
     justify-content: space-around;
 
     &__item {
-        @include text(20px, $color_white);
+        @include text(20px, $text_color_1);
 
         &.active:after {
             // animation
@@ -221,7 +244,7 @@ textarea {
             margin-top: 3px;
             // appearance
             display: block;
-            border: solid $color_white;
+            border: solid $text_color_1;
             border-width: 1px 0px 0px 0px;
         }
 
@@ -252,7 +275,7 @@ textarea {
     border-radius: $border_curve;
     border-width: 2px;
     border-style: solid;
-    border-color: $color_white;
+    border-color: $text_color_1;
 
 
     &__item {
@@ -288,7 +311,7 @@ textarea {
 
         &:hover {
             // appearance
-            border: 2px solid $color_white;
+            border: 2px solid $text_color_1;
         }
     }
 
@@ -301,22 +324,25 @@ textarea {
     height: 100%;
 
     // appearance
-    background: linear-gradient($color_orange, $color_yellow);
+    //background: linear-gradient($main_color_1, $main_color_2);
+    background: $background_gradient;
 }
 
 .ball {
     //position
     position: absolute;
 
-
     // appearance
     border-radius: 1000px;
 
-    background: linear-gradient($color_yellow, $color_orange);
+    //@extend %tmpldebug;
 
+    background: linear-gradient(400deg, $ball_color_1 15.43%, $ball_color_2 83.66%);
+    
     &.animate {
         transition: transform 0.6s ease-out;
     }
+
 
     &:nth-child(1) {
         //height: 130px;
@@ -443,20 +469,24 @@ textarea {
     &__header {
         // size
         width: 90%;
-        height: 50px;
+        height: $header_height_2;
 
         // position
         position: absolute;
-        top: -25px;
-        left: -25px;
+        top: -$header_height_2 / 2;
+        left: -$header_height_2 / 2;
+        z-index: 1;
 
         // appearance
-        background-color: $color_gray;
+        background-color: $element_color_2;
         border-radius: $border_curve;
+        //backdrop-filter: blur(20px);
 
         // children
         display: flex;
         justify-content: center;
+
+        box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.23), inset 0px 0px 4px rgba(255, 255, 255, 0.23);
     }
 
     // content
@@ -469,8 +499,10 @@ textarea {
         overflow: hidden;
 
         // appearance
-        background-color: $color_green;
+        background-color: $element_color_1;
         border-radius: $border_curve;
+        backdrop-filter: blur(20px);
+        box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.23), inset 0px 0px 4px rgba(255, 255, 255, 0.23);
 
     }
 
@@ -479,22 +511,25 @@ textarea {
 
         // position
         position: absolute;
-        bottom: -25px;
-        right: -25px;
+        bottom: -$header_height_2 / 2;
+        right: -$header_height_2 / 2;
 
         // size
         width: 80%;
-        height: 50px;
+        height: $header_height_2;
+        z-index: 1;
         //@extend %tmpldebug;
 
         // appearance
-        background-color: $color_gray;
+        background-color: $element_color_2;
         border-radius: $border_curve;
 
         // children
         display: flex;
         justify-content: center;
         align-items: center;
+
+        box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.23), inset 0px 0px 4px rgba(255, 255, 255, 0.23);
 
         & .mailing {
             @include text(15px, $color_white);
@@ -546,7 +581,7 @@ textarea {
         border-style: solid;
         border-color: $color_white;
         border-width: 1px 1px 1px 0px;
-        border-radius: 0 $border_curve / 5 $border_curve / 5 0;
+        border-radius: 0 $border_curve_2 $border_curve_2 0;
 
         //@extend %tmpldebug;
     }
@@ -621,9 +656,8 @@ textarea {
 
 // tag
 .tag {
-    background-color: $color_white;
+    background-color: $element_color_1;
     border-radius: $border_curve_2;
-
 
     &.mailing {
 
@@ -632,8 +666,8 @@ textarea {
         height: 50px;
 
         // appearance
-        background-color: $color_white;
-        border: 1px $color_white solid;
+        background-color: rgba(255, 255, 255, 0.2);
+        border: 1px $element_color_1 solid;
         //@extend %tmpldebug;
 
 
@@ -645,7 +679,7 @@ textarea {
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        @include text(18px, $color_gray);
+        @include text(18px, $color_white);
 
         & .item:nth-child(1) {
             text-align: center;
@@ -679,7 +713,7 @@ textarea {
         align-items: center;
         margin-left: 3px;
         margin-right: 3px;
-        @include text(18px, $color_gray);
+        @include text(18px, $text_color_1);
 
         & .item:nth-child(1) {
             text-align: center;
@@ -702,7 +736,7 @@ textarea {
 .popup{
     // position
     position:absolute;
-    z-index: 2;
+    z-index: 1;
     top:0px;
 
     // size
@@ -710,10 +744,10 @@ textarea {
     height: 100%;
 
     // appearance
-    background: linear-gradient($color_orange, $color_yellow);
+    background: $background_gradient;
 
     // children
-    overflow:hidden;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -724,8 +758,16 @@ textarea {
 }
 
 .popup_window {
-    width: 40%;
-    height: 600px;
+
+    @extend %tmpldebug;
+    // children
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    // size
+    width: 100%;
+    height: 100%;
 
     &__header {
         display: flex;
@@ -778,10 +820,88 @@ textarea {
     }
 }
 
+
+.company_name {
+
+    // position
+    position: absolute;
+    z-index: 4;
+
+    // appearance
+    width: 100%;
+    height: 100%;
+
+
+    // children
+    /*
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;*/
+
+    & .item:nth-child(1) {       
+        @include text(70px, $text_color_1);
+
+        display: flex;
+        width: 40%;
+        height: 20%;
+        justify-content: center;
+        align-items: center;
+
+        // position
+        position: relative;
+        margin: auto;
+        top: 23%;
+
+        //@extend %tmpldebug;
+
+
+        & .word {
+            padding-left: 15px;
+            padding-right: 15px;
+
+            display: inline-block;
+            &:first-letter {
+                @include text(130px, $text_color_1);
+            }
+        }
+    }
+
+    
+    & .item:nth-child(2) {       
+        @include text(40px, $text_color_1);
+
+
+        display: flex;
+        width: 20%;
+        justify-content: center;
+        align-items: center;
+
+        // size
+        height: 10%;
+
+        // position
+        position: relative;
+        margin: auto;
+        top: 33%;
+
+        //@extend %tmpldebug;
+
+        & .word {
+            padding-left: 15px;
+            padding-right: 15px;
+
+            display: inline-block;
+        }
+
+    }
+}
+
+
 .cover {
     pointer-events: none;
-    position: fixed;
-    z-index: 3;
+    position: absolute;
+    z-index: 2;
 
     display: flex;
     flex-direction: row;
@@ -790,6 +910,25 @@ textarea {
     height: 100%;
     width: 100%;
 
+    &.top {
+
+        &.close {
+            display: none;
+        }
+
+        z-index: 4;
+        background: $background_gradient;
+
+        //@extend %tmpldebug;
+
+        & div {
+            //@extend %tmpldebug;
+        }
+    }
+
+    //@extend %tmpldebug;
+   
+
     &__item {
         //@extend %tmpldebug;
         height: 100%;
@@ -797,13 +936,10 @@ textarea {
 
         //@extend %tmpldebug;
 
+
         &.right {
             display: flex;
             flex-direction: column;
-
-            & .cover__strip {
-                //border-width: 0px 1px 0px 0px;
-            }
 
         }
         
@@ -812,45 +948,113 @@ textarea {
             flex-direction: column;
             align-items: flex-end;
 
-            & .cover__strip {
-                //border-width: 0px 0px 0px 1px;
-            }
         }
     }
 
  
     &__strip {
         border: solid $color_white;
+        background: $background_gradient;
+        background-attachment: fixed;
+
 
         //transition: all 0.2s ease-out;
-        //@extend %tmpldebug;
 
+        
+        
         &.right {
+            border-width: 0px 0px 0px 1px;
+        }
+        
+        &.left {
             border-width: 0px 1px 0px 0px;
+            z-index: 6;
         }
 
-        &.left {
-            border-width: 0px 0px 0px 1px;
+        &.top {
+            width: 100%;
+            //border-width: 1px 1px 1px 1px;
+            //@extend %tmpldebug;
+
+            &:nth-child(1) {
+                height: 23%;
+            }
+
+            &:nth-child(2) {
+                background: blue;
+                height: 20%;
+                transition: all 1.5s ease-out;
+                
+                &.close {
+                    background: red;
+                    width: 100%;
+                    @extend %tmpldebug;
+                }
+                
+                &.left {
+                    z-index: 3;
+
+                    &.open {
+                        background: green;
+                        
+                        width: 140%;
+                        @extend %tmpldebug;
+                    }
+
+                }
+                
+                &.right {
+                    z-index: 6;
+                    
+                    &.open {
+                        background: green;
+                        width: 60%;
+                        @extend %tmpldebug;
+                    }
+                }
+            }
+
+            &:nth-child(3) {
+                height: 10%;
+            }
+
+            &:nth-child(4) {
+                height: 10%;
+
+                &.left {
+                    width: 80%;
+                }
+
+                &.right {
+                    width: 120%;
+                }
+            }
+
+            &:nth-child(5) {
+                height: 37%;
+            }
+
         }
 
         // anitmation states
         &.open {
-            background-color: $color_yellow;
+            //background-color: $main_color_1;
             width: 0%;
         }
 
         &.close {
-            background-color: $color_orange;
+            //background-color: $main_color_2;
             width: 100%;
         }
 
         &.title {
+            
         }
 
         // transititons
 
         &.open_to_close {
-            transition: all 0.5s ease-out;
+            transition: all 0.6s ease-out;
         }
         
         &.close_to_open {
@@ -910,8 +1114,6 @@ textarea {
         background-position: center;
         background-repeat: no-repeat;
     }
-
-
 
 
 }

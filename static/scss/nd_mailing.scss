@@ -1,0 +1,130 @@
+@import "nd_common.scss";
+
+
+.box {
+
+    &.mailing_editor_window {
+        // size
+        width: 50%;
+        height: 80%;
+    }
+    
+    &__header {
+        &.mailing_editor_window {
+
+            // appearance
+            padding-left: 30px;
+            padding-right: 10px;
+
+            // children
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+
+            & .item:nth-child(1) {
+                flex-grow: 1;
+                @include text(18px, $text_color_1);
+            }
+
+            & .item:nth-child(2) {
+                flex-basis: 10%;
+            }
+
+            & .item:nth-child(3) {
+                flex-basis: 10%;
+
+            }
+
+        }
+    }
+
+    &__content {
+        &.mailing_editor_window {
+
+            //children
+            display: flex;
+            flex-direction: column;
+            padding-top: $header_height_2 / 2;
+            padding-left: 30px;
+            padding-right: 30px;
+
+
+            & .item:nth-child(1) {
+                margin-top: 30px;
+
+                @include text(15px, $text_color_1);
+
+            }
+
+            & .item:nth-child(2) {
+                margin-top: 30px;
+                @include text(15px, $text_color_1);
+            }
+
+            & .item:nth-child(3) {
+                margin-top: 7px;
+
+                height: 50%;
+                width: 100%;
+                
+            }
+
+            & .item:nth-child(4) {
+                margin-top: 30px;
+                @include text(15px, $text_color_1);
+            }
+
+            & .item:nth-child(5) {
+                margin-top: 7px;
+                width: 25%;
+            }
+
+        }
+    }
+
+}
+
+
+textarea {
+    &.mailing_editor_window {
+        // appearance
+        background-color: $element_color_1;
+        padding: 7px;
+        @include text(15px, $text_color_1);
+        border-radius: $border_curve_2;
+
+        // size
+        width: 100%;
+        height: 100%;
+
+        &::placeholder {
+            @include text(15px, $text_color_2);
+        }
+
+    }
+}
+
+input {
+    &.mailing_editor_window {
+        // appearance
+        background-color: $element_color_1;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        padding-left: 7px;
+        padding-right: 7px;
+        color: text_color_2;
+
+        border-radius: $border_curve_2;
+
+        // size
+        width: 40%;
+
+        // place
+        margin-left: 15px;
+
+        &::placeholder {
+            @include text(15px, $text_color_2);
+        }
+    }
+
+}

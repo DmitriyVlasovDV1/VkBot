@@ -8,20 +8,20 @@
         height: 50px;
 
         // appearance
-        background-color: $color_white;
-        border: 1px $color_white solid;
+        background-color: $element_color_1;
+        //border: 1px solid;
         //@extend %tmpldebug;
 
 
         // postition
         margin-left: 3px;
         margin-right: 3px;
-
+        
         // children
         display: flex;
         justify-content: flex-end;
         align-items: center;
-        @include text(18px, $color_gray);
+        @include text(18px, $text_color_1);
 
         & .item:nth-child(1) {
             text-align: center;
@@ -43,14 +43,11 @@
         min-width: 100px;
         max-width: 70%;
 
-
         // appearance
-        background-color: $color_white;
-        border: 1px $color_white solid;
+        background-color: $element_color_1;
 
         overflow-wrap: break-word;
         overflow: hidden;
-
 
         // children
         padding: 10px;
@@ -65,7 +62,7 @@
         }
 
         // children
-        @include text(15px, $color_gray);
+        @include text(15px, $text_color_1);
 
     }
 }
@@ -73,15 +70,28 @@
 
 
 textarea {
-    // size
-    width: 90%;
-    height: 80%;
 
-    // children
-    @include text(15px, $color_white);
+    &.chat_msg {
+        // size
+        width: 90%;
+        height: 80%;
 
-    // appearance
-    @extend %custom_scroll;
+        // children
+        @include text(15px, $text_color_1);
+
+        // appearance
+        @extend %custom_scroll;
+
+        //@extend %tmpldebug;
+
+        &::placeholder {
+            //@extend %tmpldebug;
+            text-align: center;
+            height: 100%;
+
+            @include text(15px, $text_color_2);
+        }
+    }
 
     //@extend %tmpldebug;
 }

@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "sass_compile": "sass --watch static/scss:static/css"
+  },
+  "dependencies": {
+    "sass": "^1.53.0"
   }
 }

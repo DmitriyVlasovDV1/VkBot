@@ -80,11 +80,11 @@ h1, h2, h3, h4, h5, h6 {
   border: 2px solid rgb(72, 216, 72);
 }
 
-textarea.chat_msg::-webkit-scrollbar, .roller::-webkit-scrollbar {
+.roller::-webkit-scrollbar {
   display: none;
   width: 5px;
 }
-textarea.chat_msg::-webkit-scrollbar-thumb, .roller::-webkit-scrollbar-thumb {
+.roller::-webkit-scrollbar-thumb {
   background-color: #ffffff;
   border-radius: 5px;
 }
@@ -725,61 +725,95 @@ textarea {
   background-repeat: no-repeat;
 }
 
-.tag.bot_name {
-  width: 100%;
-  height: 50px;
-  background-color: rgba(255, 255, 255, 0.11);
-  margin-left: 3px;
-  margin-right: 3px;
+.box.mailing_editor_window {
+  width: 50%;
+  height: 80%;
+}
+.box__header.mailing_editor_window {
+  padding-left: 30px;
+  padding-right: 10px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+.box__header.mailing_editor_window .item:nth-child(1) {
+  flex-grow: 1;
   color: #ffffff;
   font-size: 18px;
   font-family: "Comfortaa", cursive;
 }
-.tag.bot_name .item:nth-child(1) {
-  text-align: center;
-  flex-grow: 1;
+.box__header.mailing_editor_window .item:nth-child(2) {
+  flex-basis: 10%;
 }
-.tag.bot_name .item:nth-child(2) {
-  flex-basis: 15%;
+.box__header.mailing_editor_window .item:nth-child(3) {
+  flex-basis: 10%;
 }
-.tag.bot_name .item:nth-child(3) {
-  flex-basis: 15%;
+.box__content.mailing_editor_window {
+  display: flex;
+  flex-direction: column;
+  padding-top: 25px;
+  padding-left: 30px;
+  padding-right: 30px;
 }
-.tag.chat_msg {
-  min-height: 50px;
-  min-width: 100px;
-  max-width: 70%;
-  background-color: rgba(255, 255, 255, 0.11);
-  overflow-wrap: break-word;
-  overflow: hidden;
-  padding: 10px;
+.box__content.mailing_editor_window .item:nth-child(1) {
+  margin-top: 30px;
   color: #ffffff;
   font-size: 15px;
   font-family: "Comfortaa", cursive;
 }
-.tag.chat_msg.right {
-  border-radius: 30px 30px 6px 30px;
+.box__content.mailing_editor_window .item:nth-child(2) {
+  margin-top: 30px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: "Comfortaa", cursive;
 }
-.tag.chat_msg.left {
-  border-radius: 30px 30px 30px 6px;
+.box__content.mailing_editor_window .item:nth-child(3) {
+  margin-top: 7px;
+  height: 50%;
+  width: 100%;
+}
+.box__content.mailing_editor_window .item:nth-child(4) {
+  margin-top: 30px;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: "Comfortaa", cursive;
+}
+.box__content.mailing_editor_window .item:nth-child(5) {
+  margin-top: 7px;
+  width: 25%;
 }
 
-textarea.chat_msg {
-  width: 90%;
-  height: 80%;
+textarea.mailing_editor_window {
+  background-color: rgba(255, 255, 255, 0.11);
+  padding: 7px;
   color: #ffffff;
   font-size: 15px;
   font-family: "Comfortaa", cursive;
-}
-textarea.chat_msg::placeholder {
-  text-align: center;
+  border-radius: 6px;
+  width: 100%;
   height: 100%;
+}
+textarea.mailing_editor_window::placeholder {
   color: rgb(206, 240, 255);
   font-size: 15px;
   font-family: "Comfortaa", cursive;
 }
 
-/*# sourceMappingURL=nd_chat.css.map */
+input.mailing_editor_window {
+  background-color: rgba(255, 255, 255, 0.11);
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 7px;
+  padding-right: 7px;
+  color: text_color_2;
+  border-radius: 6px;
+  width: 40%;
+  margin-left: 15px;
+}
+input.mailing_editor_window::placeholder {
+  color: rgb(206, 240, 255);
+  font-size: 15px;
+  font-family: "Comfortaa", cursive;
+}
+
+/*# sourceMappingURL=nd_mailing.css.map */
