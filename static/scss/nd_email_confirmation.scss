@@ -1,0 +1,29 @@
+@import "nd_common.scss";
+
+
+body {
+
+    // appearance
+    background: $background_gradient;
+
+    // children
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+
+    & div:nth-child(1) {
+        @include text(50px, $text_color_1);
+    }
+
+    & div:nth-child(2) {
+        margin-top: 40px;
+        @include text(20px, $text_color_2);
+
+        &:hover {
+            @include text(20px, $text_color_1);
+        }
+    }
+
+}

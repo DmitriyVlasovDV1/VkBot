@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <link type="text/css" href="/static/css/nd_email_confirmation.css" rel="stylesheet"/>
+        <!--<link type="text/css" href="/static/css/common.css" rel="stylesheet"/>-->
+        <meta charset="UTF-8">
+        <title>Email confirmation</title>
+    </head>
+
+    <body>
+        {% if is_confirmed -%}
+        <div>Confirmed!</div>
+        {% else -%}
+        <div>Sorry, link is obsolete</div>
+        {% endif -%}
+        <div><a href="../">go to main page</a></div>
+    </body>
+
+</html>

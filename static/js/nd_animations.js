@@ -1,34 +1,13 @@
+/**********
+ * Imports
+ **********/
 
-/*********
- * Utils
- *********/
+import {setCSS, createDiv, createPost, print} from "./nd_utils.js";
+import { updateChat } from "./chat.js";
 
-// create html block function
-function createDiv()
-{
-    const res = document.createElement('div');
+ /* end of 'imports.js' block */
 
-    for (var i = 0; i < arguments.length; i++) {
-        res.classList.add(arguments[i]);
-    }
-
-    return res;
-}
-
-// set css property
-function setCSS(el, property, value) {
-    el.style[property] = value;
-}
-
-// for python fans
-function print() {
-    for (let i = 0; i < arguments.length; i++)
-    console.log(arguments[i]);
-}
-
-
-
-
+ 
 /**********
  * Slider
  **********/
@@ -37,7 +16,6 @@ function print() {
 const slider = document.getElementById("slider");
 const slides = document.querySelectorAll(".slider__slide");
 const progressBar = document.getElementById("progress_bar");
-
 
 
 
@@ -50,6 +28,7 @@ let startX;
 let diffY = 0;
 let diffX = 0;
 let isSlidesAnimating = false;
+let isBallsAnimationg = false;
 let isDragging = false;
 
 
@@ -208,22 +187,40 @@ function zoom(event) {
 
 
 function wheelResponse(event) {
-    return
-    if (event.target !== slider) {
-        print(event.target);
+
+    if (!event.target.classList.contains('_scrollable')) {
         return;
     }
 
-    if (isSlidesAnimating)
+    if (isSlidesAnimating) {
         return;
+    }
 
     event.preventDefault();
 
     if (event.deltaY > 0) {
+        for (let j = 0; j < balls.length; j++)  {
+            //balls[j].classList.add('animate');
+            setCSS(balls[j], 'transform', `translate(${0}px, ${-20 / ballsDist[j]}px)`);
+        }
+
+        isBallsAnimationg = true;
+
+        setTimeout(returnBalls, ballAnimationTime * 1000);
+
         changeSlide(curSlide + 1);
         showCurrentSlide();
     }
-    else if (event.deltaY < -0) {
+    else if (event.deltaY < 0) {
+        for (let j = 0; j < balls.length; j++)  {
+            //balls[j].classList.add('animate');
+            setCSS(balls[j], 'transform', `translate(${0}px, ${20 / ballsDist[j]}px)`);
+        }
+
+        isBallsAnimationg = true;
+
+        setTimeout(returnBalls, ballAnimationTime * 1000);
+
         changeSlide(curSlide - 1);
         showCurrentSlide();
     }
@@ -298,12 +295,15 @@ function initBalls() {
         setCSS(balls[i], 'height', `${ballSize / ballsDist[i]}px`);
         setCSS(balls[i], 'width', `${ballSize / ballsDist[i]}px`);
         setCSS(balls[i], 'opacity', `${0.81 / Math.pow(ballsDist[i], 1.4)}`);
+        balls[i].classList.add('animate');
     }
 
 }
 
 function dragBalls() {
+
     for (let i = 0; i < balls.length; i++)  {
+        balls[i].classList.remove("animate");
         setCSS(balls[i], 'transform', `translate(${diffX * 0.08 / ballsDist[i]}px, ${diffY * 0.08 / ballsDist[i]}px)`);
     }
 }
@@ -314,9 +314,8 @@ function returnBalls() {
         setCSS(balls[i], 'transform', `translate(${0}px, ${0}px)`);
 
         setTimeout(() => {
-            balls.forEach((el) => {
-                el.classList.remove('animate');
-            });
+
+            isBallsAnimationg = false;
 
             }, ballAnimationTime * 1000);
     }
@@ -333,9 +332,8 @@ const coverRight = document.getElementById("cover_right");
 const coverLeft = document.getElementById("cover_left");
 const cover = document.getElementById("cover");
 const topCover = document.getElementById("top_cover");
-
 const topCoverStripes = document.getElementsByName("top_cover_strip");
-
+const words = document.getElementsByName('words');
 
 /*
 
@@ -344,12 +342,16 @@ closePopup.addEventListener("click", () => {
 });*/
 
 
-const closingCloseTime = 0.6;
-const closingOpenTime = 0.3;
-const closingWaitTime = 0.5;
+const closingCloseTime = 0.5;
+const closingOpenTime = 0.2;
+const closingWaitTime = 0.3;
 const preTitleTime = 0.2;
 const titleWaitTime = 0.4;
 const dltClose = 0.25;
+const companyNameOpenTime = 1.1;
+const companyNameCloseTime = 0.5;
+const companyNameWaitTime = 2;
+const companyNameDelayTime = 0.2;
 
 const numOfStripes = 20;
 const stride = 0.05;
@@ -395,8 +397,6 @@ function initStripes() {
 
 function closeCover() {
 
-    print('closing');
-
     for (let i = 0; i < numOfStripes; i++) {
         coverRight.children[i].classList.remove('open');
         coverLeft.children[i].classList.remove('open');
@@ -412,9 +412,9 @@ function closeCover() {
 }
 
 function openCover() {
-
+    
     print('opening');
-
+    
     for (let i = 0; i < numOfStripes; i++) {
         coverRight.children[i].classList.remove('close');
         coverLeft.children[i].classList.remove('close');
@@ -438,6 +438,38 @@ function fixateCover() {
 
 
 
+function openCompanyName() {
+    
+    topCover.classList.remove('close');
+    topCoverStripes.forEach((el) => {
+        el.classList.remove('close');
+        el.classList.add('open');
+    });
+
+    words.forEach((el) => {
+        el.classList.remove('close');
+        el.classList.add('open');
+    })
+}
+
+function closeCompanyName() {
+    
+    topCoverStripes.forEach((el) => {
+        el.classList.remove('open');
+        el.classList.add('close');
+    });
+    
+    words.forEach((el) => {
+        el.classList.remove('open');
+        el.classList.add('close');
+    })
+    
+    setTimeout( () => {
+        topCover.classList.add('close');
+    }, companyNameCloseTime * 1000);
+    
+}
+
 /**************
  * Start point
  **************/
@@ -448,9 +480,6 @@ function fixateCover() {
     initStripes()
     initBalls();
 
-    
-
-    longCoverClosingAnimation();
 });
 
 
@@ -459,7 +488,7 @@ function fixateCover() {
 /**************
  * Animations
  **************/
-function quickCoverClosingAnimation(cb) {
+export function quickCoverClosingAnimation(cb) {
     closeCover();
     isCoverClosed = true;
     setTimeout(fixateCover, (closingCloseTime + dltClose) * 1000);
@@ -469,26 +498,25 @@ function quickCoverClosingAnimation(cb) {
     isCoverClosed = false;
 }
 
-function longCoverClosingAnimation() {
-    //closeCover();
+export function longCoverClosingAnimation(cb) {
+    closeCover();
     isCoverClosed = true;
-    //setTimeout(fixateCover, (closingCloseTime + dltClose) * 1000);
 
-    topCover.classList.add('close');
-    setTimeout(showCompanyName, 1000);
+    let dltTime = closingCloseTime + dltClose;
+    setTimeout(fixateCover, dltTime * 1000);
+    setTimeout(cb, dltTime * 1000);
+    dltTime += companyNameDelayTime;
+    setTimeout(openCompanyName, dltTime * 1000);
 
+    dltTime += companyNameOpenTime + companyNameWaitTime;
+
+    setTimeout(closeCompanyName, dltTime * 1000);
+    dltTime += companyNameCloseTime + companyNameDelayTime;;
+    setTimeout(openCover, dltTime * 1000);
+    dltTime += closingOpenTime;
+    setTimeout(fixateCover, dltTime * 1000);
 }
 
-function showCompanyName() {
-    topCover.classList.remove('close');
-
-    topCoverStripes.forEach((el) => {
-        el.classList.remove('close');
-        el.classList.add('open');
-    });
-    
-    
-}
 
 
 /**********
@@ -501,24 +529,13 @@ function showCompanyName() {
  
  
  account.addEventListener("click", () => {
-     longCoverClosingAnimation();
+     quickCoverClosingAnimation(() => {
+        popup.classList.remove('close');
+     });
  });
   
  
- const closePopupButtons = document.getElementsByName('close_popup_button');
  
- 
- closePopupButtons.forEach((btn) => {
-
-    print('smth');
-
-    btn.addEventListener('click', () => {
-        quickCoverClosingAnimation(() => {
-            popup.classList.add('close');
-        });
-    });
- })
-
 /*****************
  * A pure kal
  *****************/

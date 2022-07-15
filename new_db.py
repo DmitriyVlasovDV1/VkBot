@@ -7,12 +7,16 @@ from main import db
 
 # all users (debug or not)
 # id: self id | type: ???(debug or not) | session: current session
-# phase: current phase in current session
+# phase: current phase in current session |
+# real_user: additional data for real user |
+# debug: additional data for debug user
 class Users(db.Model):
     id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     type = db.Column(db.String(255), nullable=False)
     session = db.Column(db.String(255), nullable=False)
     phase = db.Column(db.Integer, nullable=False)
+    real_user = db.relationship("RealUsers", cascade = "delete", backref="user", uselist=False)
+    debug_user = db.relationship("DebugUsers", cascade = "delete", backref="user", uselist=False)
 
 # vk users
 # vk_id: vk id (and self id) | user_id: common user id
@@ -25,6 +29,17 @@ class RealUsers(db.Model):
 class DebugUsers(db.Model):
     name = db.Column(db.String(255), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+# admins
+class Admins(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    email = db.Column(db.String(255))
+    hashed_password = db.Column(db.String(255))
+    rank = db.Column(db.String(255))
+
+    boss_confirmation = db.Column(db.Boolean)
+    self_confirmation = db.Column(db.Boolean)
 
 # id: self id | debug_user_name: debug user name | type: bot / user |
 # text: content text | date: sending date
@@ -154,13 +169,17 @@ class DBWrapper():
 
         try:
             self.db.session.query(table).filter_by(**template).update(value)
+            self.db.session.commit()
         except:
             pass
 
     # delete all records in 'table' table with 'element' template
     def delete_all(self, table, template={}):
         try:
-            self.db.session.query(table).filter_by(**template).delete(synchronize_session=False)
+            #self.db.session.query(table).filter_by(**template).delete()
+            for record in self.db.session.query(table).filter_by(**template).all():
+                self.db.session.delete(record)
+
             self.db.session.commit()
         except Exception as e:
             print(e)

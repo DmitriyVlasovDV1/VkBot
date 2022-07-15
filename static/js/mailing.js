@@ -1,70 +1,71 @@
+
+//#region imports
+
+import { quickCoverClosingAnimation } from "./nd_animations.js";
+import {setCSS, createDiv, createPost, print} from "./nd_utils.js";
+import { updateChat } from "./chat.js";
+
+//#endregion
+
+//#region global elements
+
 const inputMailingName = document.getElementById('input_mailing_name');
 const currentMailingName = document.getElementById('current_mailing_name');
 const selector = document.getElementById('selector');
 
 const messager = document.getElementById('messager');
 
-const editorMessageName = document.getElementById('editor_message_name');
-const editorMessageText = document.getElementById('editor_message_text');
-const editorMessageFlag = document.getElementById('editor_message_flag');
-const editorMessageTime = document.getElementById('editor_message_time');
+const editorMessageName = document.getElementById('mailing_editor_message_name');
+const editorMessageText = document.getElementById('mailing_editor_message_text');
+const editorMessageTime = document.getElementById('mailing_editor_message_time');
 
-const buttonAddMessage = document.getElementById('add_message_button');
-const buttonEditorSave = document.getElementById("button_editor_save");
-const buttonEditorClose = document.getElementById("button_editor_close");
-const editorWindow = document.getElementById("editor_window");
+const buttonAddMessage = document.getElementById('add_mailing_message_button');
+const buttonEditorSave = document.getElementById("mailing_editor_save_button");
+const buttonEditorClose = document.getElementById("mailing_editor_close_button");
+const editorWindow = document.getElementById("mailing_editor_window");
 
 
 let selectedMailing = null;
 let selectedMessage = null;
 
 
+//#endregion
 
-// create html block function
-function createDiv()
-{
-    const res = document.createElement('div');
 
-    for (var i = 0; i < arguments.length; i++) {
-        res.classList.add(arguments[i]);
-    }
-
-    return res;
-}
-
-// creating post requestion function
-function createPost(body, cb=null) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://127.0.0.1:5000/mailing');
-    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-    xhr.addEventListener('load', () => {
-        const response = JSON.parse(xhr.response);
-        if (cb != null)
-            cb(response);
-    })
-    xhr.addEventListener('error', () => {
-        console.log('ERROR!!!');
-    });
-
-    xhr.send(JSON.stringify(body));
-} // end of createPost function
+//#region editor
 
 // button add message
 buttonAddMessage.addEventListener('click', () => {
-    if (selectedMailing !== null)
-        openEditor();
+    if (selectedMailing !== null) {
+        quickCoverClosingAnimation(() => {
+            openEditor();
+        });
+    }
 });
 
-// close popup window editing message
-buttonEditorClose.addEventListener('click', () => {
-    closeEditor();
-});
-
+// save message button
 buttonEditorSave.addEventListener('click', () => {
-    if (editMessage())
-        closeEditor();
+
+    print("saving...");
+    if (editMessage()) {
+        quickCoverClosingAnimation(() => {
+            closeEditor();
+        });
+    }
+
+
+
 });
+
+
+// button close editor
+buttonEditorClose.addEventListener('click', () => {
+    quickCoverClosingAnimation(() => {
+        closeEditor();
+    });
+});
+
+
 
 // Open and close editor
 function openEditor() {
@@ -73,20 +74,18 @@ function openEditor() {
     if (selectedMessage === null) {
         editorMessageName.value = '';
         editorMessageText.value = '';
-        editorMessageFlag.value = false;
         editorMessageTime.value = '';
     } else {
         editorMessageName.value = selectedMessage.name;
         editorMessageText.value = selectedMessage.text;
-        editorMessageFlag.value = selectedMessage.is_active;
         editorMessageTime.value = new Date(selectedMessage.time).toISOString().substring(0, 19);
     }
 
-
+    editorWindow.classList.remove('close');
 }
 
 function closeEditor() {
-    editorWindow.classList.add("popup_close");
+    editorWindow.classList.add("close");
     selectedMessage = null;
 }
 
@@ -106,27 +105,27 @@ function editMessage() {
     console.log(editorMessageTime.value );
 
     if (selectedMessage === null) {
-        time = null
+        let time = null
         if (editorMessageTime.value !== '')
             time = editorMessageTime.value.slice(0, 19).replace('T', ' ') + ':00'
 
-        message = {
+        let message = {
             name: editorMessageName.value,
             text: editorMessageText.value,
-            is_active: editorMessageFlag.value,
+            is_active: true,
             time: time
         }
 
         addMessage(message);
     } else {
-        time = null
+        let time = null
         if (editorMessageTime.value !== '')
             time = editorMessageTime.value.slice(0, 19).replace('T', ' ') + ':00'
-        message = {
+        let message = {
             id: selectedMessage.id,
             name: editorMessageName.value,
             text: editorMessageText.value,
-            is_active: editorMessageFlag.value,
+            is_active: true,
             time: time
         }
         updateMessage(message);
@@ -135,24 +134,9 @@ function editMessage() {
     return true;
 }
 
-// add mailing button
-inputMailingName.addEventListener("keyup", function(event) {
-    if (event.key === "Enter") {
-        if (inputMailingName.value.trim() === '') {
-            alert( "Название должно вдохновлять" );
-            return;
-        }
+//#endregion
 
-        const body = {
-            type: 'add_mailing',
-            mailing_name: inputMailingName.value.trim()
-        };
-        createPost(body, updateSelector);
-
-        inputMailingName.value = '';
-    }
-});
-
+//#region to backend functions 
 
 // send message
 function sendMessage(msg) {
@@ -160,7 +144,7 @@ function sendMessage(msg) {
         type: 'send_message',
         message: msg
     }
-    createPost(body);
+    createPost(body, updateChat);
 }
 
 // add message
@@ -190,16 +174,6 @@ function deleteMessage(msg) {
     createPost(body, updateMessager);
 }
 
-
-// delete mailig function
-function deleteMailing(mailing) {
-    const body = {
-        type: 'delete_mailing',
-        mailing: mailing
-    };
-    createPost(body, updateSelector);
-}
-
 // select mailing function
 function selectMailing(mailing) {
     const body = {
@@ -227,17 +201,40 @@ function deleteMailing(mailing) {
     createPost(body, updateSelector);
 }
 
-function updateMessage(msg) {
-    const body = {
-        type: 'update_message',
-        message: msg
-    };
-    createPost(body, updateMessager);
+//#endregion
+
+//#region selector
+
+
+// add mailing button
+inputMailingName.addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        if (inputMailingName.value.trim() === '') {
+            alert( "Название должно вдохновлять" );
+            return;
+        }
+
+        const body = {
+            type: 'add_mailing',
+            mailing_name: inputMailingName.value.trim()
+        };
+        createPost(body, updateSelector);
+
+        inputMailingName.value = '';
+    }
+});
+
+
+// selector initialization
+function initSelector() {
+    selector.innerHTML = '';
 }
 
 
 // update selector function
 function updateSelector(response) {
+
+    print("selector upadtated", response);
     if (!('mailings' in response && 'exeError' in response)) {
         console.log("Error: wrong response format");
         return;
@@ -252,16 +249,13 @@ function updateSelector(response) {
     const mailings = response.mailings;
     mailings.forEach(mailing => {
         const item = createDiv('roller__item');
-        const tag = createDiv('tag_mailing');
+        const tag = createDiv('tag', 'mailing');
         
-        const nameItem = createDiv("clickable_text", "tag_mailing_item");
+        const nameItem = createDiv("clickable_text", "item");
         nameItem.innerText = mailing.name;
-        nameItem.addEventListener('click', () => {
-            selectMailing(mailing);
-        });
 
         const inputItem = document.createElement('input');
-        inputItem.classList.add('checkbox', "tag_mailing_item");
+        inputItem.classList.add('checkbox', "item");
         inputItem.type = 'checkbox';
         inputItem.checked = mailing.is_active;
         inputItem.addEventListener("change", () => {
@@ -269,15 +263,21 @@ function updateSelector(response) {
             updateMailing(mailing);
         });
 
-        const buttonItem = createDiv("icon", "icon_delete", "tag_mailing_item");
-        buttonItem.addEventListener('click', () => {
+        const buttonSelect = createDiv("button", "arrows", "item");
+        buttonSelect.addEventListener('click', () => {
+            selectMailing(mailing);
+        });
+
+        const buttonDelete = createDiv("button", "cross", "item");
+        buttonDelete.addEventListener('click', () => {
             if (confirm(`Delete '${mailing.name}' mailing?`))
                 deleteMailing(mailing);
         });
 
         tag.append(nameItem);
         tag.append(inputItem);
-        tag.append(buttonItem);
+        tag.append(buttonSelect);
+        tag.append(buttonDelete);
         item.append(tag);
         fragment.appendChild(item);
     });
@@ -287,7 +287,21 @@ function updateSelector(response) {
     selector.scrollTop = selector.scrollHeight;
 }
 
-// update selector function
+
+//#endregion
+
+//#region messager
+
+
+
+// messager initialization
+function initMessager() {
+    messager.innerHTML = '';
+    currentMailingName.innerText = 'Not chosen';
+}
+
+
+// update messager function
 function updateMessager(response) {
     if (!('current_mailing' in response && 'messages' in response &&
     'exeError' in response)) {
@@ -309,17 +323,19 @@ function updateMessager(response) {
     const messages = response.messages;
     messages.forEach(msg => {
         const item = createDiv('roller__item');
-        const tagItem = createDiv('tag_mailing', 'tag_mailingmsg');
-        const nameItem = createDiv('clickable_text', 'tag_mailingmsg_item');
+        const tagItem = createDiv('tag', 'mailingmsg');
+        const nameItem = createDiv('clickable_text', 'item');
         nameItem.innerText = msg.name;
 
         nameItem.addEventListener('click', () => {
-            selectedMessage = msg;
-            openEditor();
+            quickCoverClosingAnimation(() => {
+                selectedMessage = msg;
+                openEditor();
+            });
         });
 
         const inputItem = document.createElement('input');
-        inputItem.classList.add('checkbox', "tag_mailingmsg_item");
+        inputItem.classList.add('checkbox', "item");
         inputItem.type = 'checkbox';
         inputItem.checked = msg.is_active;
         inputItem.addEventListener("change", () => {
@@ -327,12 +343,12 @@ function updateMessager(response) {
             updateMessage(msg);
         });
 
-        const button1Item = createDiv("icon", "icon_plus", 'tag_mailingmsg_item');
+        const button1Item = createDiv("button", "arrows", 'item');
         button1Item.addEventListener('click', () => {
             sendMessage(msg);
         });
 
-        const button2Item = createDiv("icon", "icon_delete", 'tag_mailingmsg_item');
+        const button2Item = createDiv("button", "cross", 'item');
         button2Item.addEventListener('click', () => {
             deleteMessage(msg);
         })
@@ -346,31 +362,32 @@ function updateMessager(response) {
     });
 
     messager.appendChild(fragment);
-
-
 }
 
 
-function initMessager() {
-    messager.innerHTML = '';
-    currentMailingName.innerText = 'Not chosen';
-}
 
+//#endregion
+
+//#region start point
 
 /* Global update */
 document.addEventListener('DOMContentLoaded', () => {
     const body = {
-        type: 'update',
+        type: 'mailing_update',
     };
-    console.log("Loaded");
+    console.log("Loaded1");
+    initSelector();
+    initMessager();
+
     createPost(body, (response)=>{
         updateSelector(response);
     });
 
-    initMessager();
 
     selectedMessage = null;
     selectedMailing = null;
 
     //checkForSend();
 });
+
+//#endregion

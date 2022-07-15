@@ -2,18 +2,27 @@
     <head>
         <link type="text/css" href="/static/css/nd_chat.css" rel="stylesheet"/>
         <link type="text/css" href="/static/css/nd_mailing.css" rel="stylesheet"/>
+        <link type="text/css" href="/static/css/nd_registration.css" rel="stylesheet"/>
+        <link type="text/css" href="/static/css/nd_singup_page.css" rel="stylesheet"/>
         <!--<link type="text/css" href="/static/css/common.css" rel="stylesheet"/>-->
         <meta charset="UTF-8">
-        <title>No title</title>
+        <title>AS1 lox</title>
+
+        <script type="module" src="../static/js/nd_utils.js"></script>
+        <script type="module" src="../static/js/nd_animations.js"></script>
+        <script type="module" src="../static/js/chat.js"></script>
+        <script type="module" src="../static/js/mailing.js"></script>
+        <script type="module" src="../static/js/nd_registration.js"></script>
+    
     </head>
 
     <body class="main_container" >
 
         <!-- #region company name -->
-        <div class="cover top" id="top_cover">
+        <div class="cover top close" id="top_cover">
             <div class="company_name">
-                <div class="item" id="word1"><div class="word">Dijcstra</div><div class="word">Sons</div></div>
-                <div class="item" id="word2"><div class="word">IT</div><div class="word">company</div></div>
+                <div class="item close" name="words"><div class="word">Dijkstra</div><div class="word">Sons</div></div>
+                <div class="item close" name="words"><div class="word">IT</div><div class="word">company</div></div>
             </div>
     
             <div class="cover__item right">
@@ -34,12 +43,14 @@
 
         <!-- #endregion -->
 
+        <!-- #region cover -->
         <div class="cover" id="cover">
             <div class="cover__item right" id="cover_left"></div>
             <div class="cover__item left" id="cover_right"></div>
         </div>
+        <!-- #endregion -->
 
-
+        <!-- #region header -->
         <div class="header">
             <div class="header__item"><div class="switcher">
                 <div class="switcher__item active"></div>
@@ -55,7 +66,10 @@
             </div></div>
             <div class="header__item"><div class="header__account outer" id="account"><div class="header__account inner"></div></div></div>
         </div>
-        <!-- content -->
+
+        <!-- #endregion header -->
+        
+        <!-- #region content -->
         <div class="content" id="content">
 
             <div class="ball"></div>
@@ -66,8 +80,8 @@
             <!-- slider -->
             <div class="slider" id="slider">
                 <!-- slide 1 -->
-                <div class="slider__slide active">
-                    <div class="container mailing">
+                <div class="slider__slide _scrollable active">
+                    <div class="container _scrollable mailing">
                         <!-- item 1 -->
                         <div class="container__item">
                             <div class="box">
@@ -131,8 +145,8 @@
                 </div>
                 <!-- end of slide 1 -->
                 <!-- slide 2 -->
-                <div class="slider__slide">
-                    <div class="container mailing">
+                <div class="slider__slide _scrollable">
+                    <div class="container _scrollable mailing">
                         <!-- item 1 -->
                         <div class="container__item">
                             <div class="box">
@@ -148,6 +162,7 @@
                                                 <div class="clickable_text item">Name of mailing</div>
                                                 <input class="checkbox item" type="checkbox">
                                                 <div class="button arrows item"></div>
+                                                <div class="button cross item"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -249,7 +264,7 @@
 
                                     </div>
                                 </div>
-                                <div class="box__bottom" id='add_message_button'><div class="mailing">New message</div></div>
+                                <div class="box__bottom" id='add_mailing_message_button'><div class="mailing">New message</div></div>
                             </div>
                         </div>
                         <!-- end of item 2 -->
@@ -257,71 +272,72 @@
                     </div>
                 </div>
                 <!-- end of slide 2 -->
-                <div class="slider__slide"></div>
-                <div class="slider__slide"></div>
+                <div class="slider__slide _scrollable"></div>
+                <div class="slider__slide _scrollable"></div>
             </div> <!-- end of slider -->
-
-
-        </div>  <!-- end of content -->
-
-
+        </div>
+        <!-- #endregion -->
 
         <!-- #region popup mailing msg editor-->
         <div class="popup close" id="mailing_editor_window">
             <div class="box mailing_editor_window">
                 <div class="box__header mailing_editor_window">
                     <div class="item">Mailing message editor</div>
-                    <div class="button check item"></div>
-                    <div class="button cross item" name="close_popup_button"></div>
+                    <div class="button check item" id="mailing_editor_save_button"></div>
+                    <div class="button cross item" id="mailing_editor_close_button"></div>
                 </div>
                 <div class="box__content mailing_editor_window">
-                    <div class="item">Name: <input required class="mailing_editor_window"  type="text" placeholder="Type mailing's message name" id="editor_message_name"></div>
+                    <div class="item">Name: <input required class="mailing_editor_window"  type="text" placeholder="Type mailing's message name" id="mailing_editor_message_name"></div>
                     <div class="item">Message content:</div>
-                    <div class="item"><textarea class="mailing_editor_window" id="editor_message_text" placeholder="Type mailing's message content"></textarea></div>
+                    <div class="item"><textarea class="mailing_editor_window" id="mailing_editor_message_text" placeholder="Type mailing's message content"></textarea></div>
                     <div class="item">Sending time:</div>
-                    <div class="item"><input type="datetime-local" id="editor_message_time"></div>
+                    <div class="item"><input type="datetime-local" id="mailing_editor_message_time"></div>
+                </div>
+            </div>
+        </div>
+        <!-- #endregion -->
+
+        <!-- #region popup registration page -->
+        <div class="popup close" id="singin_page">
+            <div class="box registration_page">
+                <div class="box__header registration_page">
+                    <div class="item">Sing in</div>
+                </div>
+                <div class="box__content registration_page">
+                    <div class="item"><div class="item2"></div><input required id="singin_name" class="item2 registration_page"  type="text" placeholder="Name"></div>
+                    
+                    <div class="item"><div class="item2"></div><input required id="singin_password" class="item2 registration_page"  type="password" placeholder="Password"> </div>
+                    <div class="item"><div class="item2" id="singin_button">Sing in</div></div>
+                    <div class="item"></div>
+                    <div class="item">
+                        <input class="item2" type="checkbox">
+                        <div class="item2">Remember me? </div>
+                        <div class="item2" id="goto_singup_button">Sing up</div>
+                        <div class="item2">Forgot password?</div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
         <!-- #endregion -->
 
 
-            <!--
-            <div class="popup_window">
-                <div class="popup_window__header">
-                    <div class="popup_window__header_item">Editing mailing message</div>
-                    <div class="popup_window__header_item" id="button_editor_save">Save</div>
-                    <div class="popup_window__header_item" id="button_editor_close">Close</div>
+        <!-- #region popup singup page -->
+        <div class="popup close" id="singup_page">
+            <div class="box singup_page">
+                <div class="box__header singup_page">
+                    <div class="item">Sing up</div>
                 </div>
-                <div class="popup_window_content">
-                    <span class="small_text">Name: </span><input required class="input_text" size="60" type="text" placeholder="Type new mailing's message name " id="editor_message_name">
-                    <br><br>
-                    <div class="small_text">Content:</div>
-                    <div><textarea class="input_textarea_mailing"  id="editor_message_text"></textarea><div>
-                        <br><br>
-                        <div class="small_text">Sending time:</div>
-                        <br>
-                        <input type="datetime-local" class="input_time" id="editor_message_time">
-                        <br><br>
-                        <span class="small_text"  id="editor_message_flag">Is active:</span> <input class="checkbox" type="checkbox">
-                    </div>
+                <div class="box__content singup_page">
+                    <div class="item"><div class="item2"></div><input required class="item2 singup_page"  type="text" placeholder="Name" id="singup_name"></div>
+                    <div class="item"><div class="item2"></div><input required class="item2 singup_page"  type="text" placeholder="Email" id="singup_email"></div>
+                    <div class="item"><div class="item2"></div><input required class="item2 singup_page"  type="password" placeholder="Password" id="singup_password"> </div>
+                    <div class="item"><div class="item2"></div><input required class="item2 singup_page"  type="password" placeholder="Repeat password" id="singup_password_2"> </div>
+                    <div class="item"><div class="item2" id="singup_button">Sing up</div></div>
                 </div>
-            </div>-->
-            
-
-
-
-    <script src="../static/js/nd_animations.js"></script>
-    <script src="../static/js/chat.js"></script>
+            </div>
+        </div>
+        <!-- #endregion -->
+        
     </body>
 </html>
-
-    <!--<div class="tmp"><div class="icon"></div></div>-->
-            <!--
-            <div class="cover">
-                <div class="cover__icon left" id="cover_icon_left"><div></div></div>
-                <div class="cover__icon right" id="cover_icon_right"><div></div></div>
-    
-                <div class="cover__item right" id="cover_left"></div>
-                <div class="cover__item left" id="cover_right"></div>
-            </div>-->

@@ -1,3 +1,11 @@
+/**********
+ * Imports
+ **********/
+
+ import {setCSS, createDiv, createPost, print} from "./nd_utils.js";
+
+ /* end of 'imports.js' block */
+
 //const buttonMessage = document.getElementById('button_message');
 //const butttonAddUser = document.getElementById('button_add_user')
 //const butttonDeleteUser = document.getElementById('button_delete_user')
@@ -6,35 +14,6 @@ const inputMessage = document.getElementById('textarea_message');
 const selector = document.getElementById('chat_selector');
 const messager = document.getElementById('chat_messager');
 const textCurrentUser = document.getElementById('text_current_user');
-
-// create html block function
-function createDiv()
-{
-    const res = document.createElement('div');
-
-    for (var i = 0; i < arguments.length; i++) {
-        res.classList.add(arguments[i]);
-    }
-
-    return res;
-}
-
-// creation post request
-function createPost(body, cb={}) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://127.0.0.1:5000/');
-    xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-    xhr.addEventListener('load', () => {
-        const response = JSON.parse(xhr.response);
-        cb(response);
-    })
-    xhr.addEventListener('error', () => {
-        console.log('ERROR!!!');
-    });
-    
-    xhr.send(JSON.stringify(body));
-}
 
 // user name input reponse
 inputUserName.addEventListener("keyup", function(event) {
@@ -192,15 +171,23 @@ function updateMessager(response) {
 
 /* Global update */
 
-document.addEventListener('DOMContentLoaded', () => {
+
+export function updateChat() {
     const body = {
-        type: 'update',
+        type: 'chat_update',
     };
-    console.log("Loaded");
+
     createPost(body, (response)=>{
         updateSelector(response);
         updateMessager(response);
     });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    updateChat();
+    console.log("Loaded2");
+
 
     checkForSend();
 });

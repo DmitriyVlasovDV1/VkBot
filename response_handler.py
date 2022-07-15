@@ -227,37 +227,35 @@ class response_handler:
 
             #self.db.numerate_all('mailings', 'num', {'is_active': 1})
 
-            user_and_mail = self.db.get_all('mailing_and_user', {'user_id': data['user_id']})
+            user_and_mail = self.db.get_all(MailingAndUser, {'user_id': data['user_id']})
 
             user_mailings = []
             for link in user_and_mail:
-                user_mailings.append(self.db.get_one('mailings', {'id': link['mailing_id'], 'is_active': 1}))
+                user_mailings.append(self.db.get_one(Mailings, {'id': link['mailing_id'], 'is_active': 1}))
 
-            mailings = self.db.get_all('mailings', {'is_active': 1})
+            mailings = self.db.get_all(Mailings, {'is_active': 1})
+
+            print(mailings)
 
             available = []
             for ml in mailings:
                 if ml not in user_mailings:
                     available.append(ml)
 
-            message = '''--------------------------------------------------
-Доступные рассылки:
---------------------------------------------------\n\n'''
+            message = '''==[  Доступные рассылки:  ]==\n\n'''
 
             if len(available):
                 for ml in available:
-                    message += str(ml['num']) + ') ' + ml['name'] + '\n'
+                    message += str(ml['id']) + ') ' + ml['name'] + '\n'
             else:
-                message += "Нет доступных рассылок ¯\_(ツ)_/¯\n"
+                message += "Нет доступных рассылок\n"
 
-            message += '''\n--------------------------------------------------
-Ваши подписки:
---------------------------------------------------\n\n'''
+            message += '''\n\n==[  Ваши подписки:  ]==\n\n'''
             if len(user_mailings):
                 for ml in user_mailings:
-                    message += str(ml['num']) + ') ' + ml['name'] + '\n'
+                    message += str(ml['id']) + ') ' + ml['name'] + '\n'
             else:
-                message += "У вас нет подписок ¯\_(ツ)_/¯\n"
+                message += "У вас нет подписок\n"
 
             self.send_message(data['user_id'], message)
             message = \
@@ -290,17 +288,17 @@ class response_handler:
 
 
             if cmd[0] == "/sub":
-                mailing = self.db.get_one('mailings', {'is_active': 1, 'num': cmd[1]})
+                mailing = self.db.get_one(Mailings, {'is_active': 1, 'id': cmd[1]})
                 if mailing != None:
-                    self.db.add_one('mailing_and_user', {'user_id': data['user_id'], 'mailing_id': mailing['id']})
+                    self.db.add_one(MailingAndUser, {'user_id': data['user_id'], 'mailing_id': mailing['id']})
                 self.update_session(data['user_id'], 'mailing', 0)
                 self.run_session(data)
                 return
 
             if cmd[0] == "/unsub":
-                mailing = self.db.get_one('mailings', {'is_active': 1, 'num': cmd[1]})
+                mailing = self.db.get_one(Mailings, {'is_active': 1, 'id': cmd[1]})
                 if mailing != None:
-                    self.db.delete_all('mailing_and_user', {'user_id': data['user_id'], 'mailing_id': mailing['id']})
+                    self.db.delete_all(MailingAndUser, {'user_id': data['user_id'], 'mailing_id': mailing['id']})
                 self.update_session(data['user_id'], 'mailing', 0)
                 self.run_session(data)
                 return
